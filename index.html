@@ -809,6 +809,192 @@
       padding: 60px 20px;
       font-size: 14px;
     }
+
+    .prompt-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .prompt-item {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .prompt-item:hover {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .prompt-item:active {
+      transform: translateY(0);
+    }
+
+    .instruction-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .instruction-modal.show {
+      display: flex;
+    }
+
+    .instruction-content {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .instruction-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .instruction-header h3 {
+      margin: 0;
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .instruction-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .instruction-close:hover {
+      color: var(--text-main);
+    }
+
+    .instruction-body {
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .instruction-steps {
+      margin-bottom: 16px;
+    }
+
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .step-number {
+      background: var(--accent);
+      color: #1a1a1a;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+      color: var(--text-main);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .instruction-tips {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 16px;
+    }
+
+    .instruction-tips-title {
+      color: var(--accent);
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .instruction-tips-content {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .instruction-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .instruction-btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .instruction-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .instruction-btn.primary {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+    }
+
+    .instruction-btn.primary:hover {
+      filter: brightness(1.1);
+    }
   </style>
 </head>
 
@@ -823,6 +1009,23 @@
           <span>作者: 纾炽 <span class="author-highlight" onclick="copyWx()">微信: shuchi1016</span></span>
         </div>
       </header>
+
+      <div>
+        <label>内置提示词（快速选择）</label>
+        <select id="promptCategory" style="margin-bottom: 8px;">
+          <option value="">选择提示词分类...</option>
+          <option value="fashionModel">👗 服装模特</option>
+          <option value="landscape">🏔️ 风景自然</option>
+          <option value="portrait">👤 人物肖像</option>
+          <option value="animal">🦁 动物世界</option>
+          <option value="architecture">🏛️ 建筑设计</option>
+          <option value="art">🎨 艺术创作</option>
+          <option value="food">🍽️ 美食饮品</option>
+          <option value="tech">🚀 科技未来</option>
+          <option value="fantasy">🧙 奇幻想象</option>
+        </select>
+        <div id="promptList" class="prompt-list" style="display: none;"></div>
+      </div>
 
       <div>
         <label>创意描述 (Prompt)</label>
@@ -910,6 +1113,23 @@
     </div>
   </div>
 
+  <!-- 操作说明弹窗 -->
+  <div class="instruction-modal" id="instructionModal">
+    <div class="instruction-content">
+      <div class="instruction-header">
+        <h3 id="instructionTitle">📝 操作说明</h3>
+        <button class="instruction-close" onclick="closeInstruction()">✕</button>
+      </div>
+      <div class="instruction-body" id="instructionBody">
+        <div class="instruction-steps" id="instructionSteps"></div>
+        <div class="instruction-tips" id="instructionTips"></div>
+      </div>
+      <div class="instruction-footer">
+        <button class="instruction-btn primary" onclick="closeInstruction()">知道了</button>
+      </div>
+    </div>
+  </div>
+
   <div class="lightbox" id="lightbox">
     <div class="lb-header">
       <span id="lbInfo">Preview</span>
@@ -952,10 +1172,139 @@
       let historyPage = 1;
       const historyPerPage = 10;
 
+      // ====== 内置提示词数据 ======
+      const BUILTIN_PROMPTS = {
+        fashionModel: [
+          '25岁左右女模特穿着参考图1同款套装，搭配一双裸色细跟短靴既显腿长又能增加优雅感。戴着珍珠耳钉，半挽着一个丝绒小方包，整体造型温柔又显贵气。自然面对镜头站姿，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。右手持带衣架的参考图中同款上衣（与参考图一致），左手指着右手衣服，动作俏皮。左侧为黑色展示柜，柜内上方金色挂杆悬挂6件参考图中同款上衣，下方白色毛绒衬垫上摆放玫瑰花束与黑色丝绒小方包，右侧大面积落地窗，周边圣诞装饰，窗外雪景与街道景观，展示柜上方墙面投影音乐播放界面，模特站姿稍作调整，微笑弧度更柔和',
+          '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，整体造型温柔又显贵气，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。身体微微前倾，单手抬起至唇边送出飞吻，眼神带笑看向镜头，姿态娇俏甜美。在充满早春氛围的服装店内，背景有挂满装饰的摆件、落地窗外的街景与暖阳，墙面电子屏正展示同款套装海报，右侧衣架陈列着多款春夏服装，整体光线明亮温暖，充满节日氛围感。韩系画报风，高清晰度，色彩饱满，突出服装质感与人物甜美气质',
+          '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，搭配一双裸色细跟短靴既显腿长又能增加优雅感，半挽着一个丝绒小方包整体造型温柔又显贵气面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。侧身站立，温柔抚摸一只乖巧的萨摩耶犬的头部，狗狗仰头露齿微笑，一人一狗互动治愈温暖，人物眼神含笑看向镜头。简约明亮的服装店内，背景电子屏展示参考图同款套装海报，落地窗外可见早春街景与积雪，整体光线通透干净，氛围温馨治愈。治愈系时尚大片，高清画质，色彩温暖，突出服装的亲和力与场景的温馨感',
+          '场景纪实写真，女生棕黄波浪长发，搭配参考图1中同款穿搭，不要衣服上斜挎小包包包，挎着参考图1同款包包，戴着参考图1同款帽子，左手举浅色手机挡脸对着玻璃自拍，背景为城市街道（包含路边有人行道和绿化带，种植着行道树和低矮的灌木。树木的叶子看起来并不茂盛绿、行驶车辆、白色护栏、蓝色P停车指示牌、三灰色人行道与黄色盲道砖），背景中清晰可见一栋现代化的摩天大楼，玻璃幕墙呈现出蓝灰色调，具有典型的CBD（中央商务区）特征。大楼线条笔直，网格状的窗户整齐排列。自然夕阳落日光。夕阳光从人物正面（即反射面的后方）照射过来，照亮了人物的穿搭细节，衣服的纹理和质感在光照下显得非常有光泽。地面和身上有淡淡的投影，光感通透，没有强烈的阴影，非常适合展示服装颜色。8K超高清，清晰呈现面料的纹理和层次。画面风格日常随性，色调清新，随手拍，还原逛街后街边自拍的生活氛围，衣服细节和挂件保持不变',
+          '女生棕黄波浪长发，扎成侧尾麻花辫，戴着浅米色草编帽，戴着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，穿着参考图中同款鞋子，挎着同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。街道有椰子树，新人，车辆，护栏远处是沙滩，大海，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片',
+          '女生棕黄长发编成侧尾麻花辫，前面是高颅顶 带着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，不要衣服上斜挎小包包，穿着参考图中同款鞋子，拎着参考图同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。护栏后边有行走的车辆，远处是弯曲的河流，河流旁边有稀疏的油菜花，能看到一些矮房子，房子周围全是花的盆栽 花的藤蔓 绿植的藤蔓，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片'
+        ],
+        landscape: [
+          '壮丽的山脉日出，金色阳光洒满山谷',
+          '宁静的湖泊倒影，蓝天白云映衬',
+          '神秘的森林小径，阳光透过树叶',
+          '壮观的瀑布飞流直下，彩虹环绕',
+          '广阔的草原，野花遍地，远山如黛',
+          '梦幻的极光夜空，星空璀璨',
+          '宁静的海边日落，橙红色天空',
+          '雪山冰川，晶莹剔透的蓝色冰层',
+          '热带雨林，绿意盎然，鸟语花香',
+          '沙漠绿洲，椰枣树环绕的清澈泉水'
+        ],
+        portrait: [
+          '优雅的女性肖像，柔和的光线，精致的妆容',
+          '帅气的男性肖像，坚毅的眼神，阳光帅气',
+          '可爱的儿童肖像，天真烂漫的笑容',
+          '慈祥的老人肖像，智慧的皱纹，温暖的微笑',
+          '时尚模特，前卫的造型，独特的气质',
+          '古典美人，旗袍装扮，东方韵味',
+          '运动健将，充满活力的姿态',
+          '艺术家肖像，深邃的眼神，独特的气质',
+          '职业人士，干练的形象，自信的表情',
+          '少数民族服饰，传统装扮，文化特色'
+        ],
+        animal: [
+          '威武的雄狮，金色的鬃毛，王者风范',
+          '可爱的大熊猫，憨态可掬，吃竹子',
+          '优雅的孔雀，开屏展示绚丽羽毛',
+          '矫健的猎豹，奔跑姿态，速度之美',
+          '神秘的雪豹，高山之巅，威严凝视',
+          '聪明的海豚，跃出水面，欢快嬉戏',
+          '雄伟的老鹰，展翅翱翔，蓝天背景',
+          '温顺的大象，母子同行，温情画面',
+          '灵动的蝴蝶，花间飞舞，色彩斑斓',
+          '憨厚的北极熊，冰雪世界，白色王国'
+        ],
+        architecture: [
+          '现代摩天大楼，玻璃幕墙，城市天际线',
+          '古典欧式建筑，精美雕刻，优雅拱门',
+          '中国传统建筑，飞檐翘角，红墙黄瓦',
+          '未来主义建筑，流线型设计，科技感',
+          '日式庭院建筑，枯山水，禅意空间',
+          '哥特式教堂，尖顶高耸，彩色玻璃窗',
+          '现代别墅设计，落地窗，庭院花园',
+          '古城堡建筑，石墙塔楼，历史沧桑',
+          '伊斯兰建筑，穹顶拱门，几何图案',
+          '生态建筑，绿色植物墙，可持续发展'
+        ],
+        art: [
+          '油画风格，厚重的笔触，丰富的色彩',
+          '水彩画风格，淡雅的色彩，流动的质感',
+          '素描风格，黑白线条，光影对比',
+          '印象派风格，光与色的交织',
+          '抽象艺术，几何图形，大胆配色',
+          '超现实主义，梦幻场景，奇特想象',
+          '波普艺术，鲜艳色彩，重复图案',
+          '极简主义，简洁线条，留白美学',
+          '数字艺术，科幻元素，未来感',
+          '传统国画，水墨丹青，意境深远'
+        ],
+        food: [
+          '精致的法式甜点，马卡龙色彩缤纷',
+          '诱人的牛排，焦嫩多汁，配菜精美',
+          '传统中式点心，造型精美，色香味俱全',
+          '新鲜的海鲜拼盘，色彩丰富，摆盘精致',
+          '香浓的咖啡拉花，泡沫细腻，香气四溢',
+          '日式寿司拼盘，新鲜食材，精美摆盘',
+          '意式披萨，芝士拉丝，配料丰富',
+          '清爽的水果沙拉，色彩缤纷，健康美味',
+          '传统火锅，热气腾腾，食材丰富',
+          '精致的下午茶，三层点心架，优雅氛围'
+        ],
+        tech: [
+          '未来城市，飞行汽车，全息投影',
+          '机器人世界，智能机器人，人机共存',
+          '太空站，宇航员，地球背景',
+          '赛博朋克城市，霓虹灯，雨夜',
+          '量子计算机，光子流动，科技感',
+          '虚拟现实世界，沉浸式体验，数字空间',
+          '人工智能大脑，神经网络，数据流动',
+          '未来交通工具，磁悬浮，流线型设计',
+          '智能家居，自动化系统，现代生活',
+          '生物科技，DNA双螺旋，微观世界'
+        ],
+        fantasy: [
+          '魔法森林，精灵飞舞，发光植物',
+          '巨龙翱翔，火焰喷吐，城堡背景',
+          '魔法师施法，魔法光芒，神秘符文',
+          '美人鱼公主，海底宫殿，珊瑚环绕',
+          '独角兽，彩虹森林，梦幻光芒',
+          '精灵王国，树屋城市，自然和谐',
+          '魔法城堡，悬浮空中，云雾缭绕',
+          '凤凰涅槃，火焰重生，金色光芒',
+          '矮人铁匠铺，锻造神器，火花四溅',
+          '魔法水晶球，能量流动，神秘光芒'
+        ]
+      };
+
+      // 操作说明数据
+      const PROMPT_INSTRUCTIONS = {
+        fashionModel: {
+          title: '👗 服装模特生成指南',
+          steps: [
+            '选择您想要的模特效果图提示词（共6种不同场景）',
+            '上传清晰的服装参考图片（建议正面平铺图）',
+            '图片背景建议纯色或简洁背景',
+            '图片分辨率建议不低于1024×1024',
+            'AI将根据提示词生成专业模特穿着效果图'
+          ],
+          tips: '💡 提示：包含3个专业效果图和3个对镜自拍场景。提示词包含完整的模特描述（五官、妆容、发型、动作、场景），上传服装图片后AI会智能生成专业时尚大片效果。建议选择光线充足、细节清晰的服装图片。'
+        }
+      };
+
       // ====== DOM 元素 ======
       const el = (id) => document.getElementById(id);
       const ui = {
         prompt: el('prompt'),
+        promptCategory: el('promptCategory'),
+        promptList: el('promptList'),
+        instructionModal: el('instructionModal'),
+        instructionTitle: el('instructionTitle'),
+        instructionSteps: el('instructionSteps'),
+        instructionTips: el('instructionTips'),
         model: el('modelSelect'),
         ratio: el('ratioSelect'),
         size: el('sizeSelect'),
@@ -1034,6 +1383,88 @@
       ui.model.onchange = () => {
         localStorage.setItem(STORE_MODEL, ui.model.value);
         updateSizeAvailability();
+      };
+
+      // ====== 内置提示词功能 ======
+      ui.promptCategory.onchange = () => {
+        const category = ui.promptCategory.value;
+        if (category && BUILTIN_PROMPTS[category]) {
+          renderPromptList(category);
+          ui.promptList.style.display = 'flex';
+        } else {
+          ui.promptList.style.display = 'none';
+        }
+      };
+
+      function renderPromptList(category) {
+        const prompts = BUILTIN_PROMPTS[category] || [];
+        
+        // 为服装模特分类添加简短标题
+        const titles = {
+          fashionModel: [
+            '效果图1 - 圣诞展示柜', 
+            '效果图2 - 早春画报', 
+            '效果图3 - 治愈系宠物',
+            '对镜自拍1 - CBD夕阳',
+            '对镜自拍2 - 海边清新',
+            '对镜自拍3 - 田园风光'
+          ]
+        };
+        
+        ui.promptList.innerHTML = '';
+        prompts.forEach((text, i) => {
+          const displayText = titles[category] ? titles[category][i] : text.substring(0, 30) + '...';
+          const div = document.createElement('div');
+          div.className = 'prompt-item';
+          div.textContent = displayText;
+          div.onclick = () => selectPrompt(i, category);
+          ui.promptList.appendChild(div);
+        });
+      }
+
+      window.selectPrompt = (index, category) => {
+        const prompts = BUILTIN_PROMPTS[category] || [];
+        if (prompts[index]) {
+          ui.prompt.value = prompts[index];
+          ui.prompt.focus();
+          
+          // 如果是服装模特分类，显示操作说明
+          if (category === 'fashionModel' && PROMPT_INSTRUCTIONS[category]) {
+            showInstruction(category);
+          } else {
+            msg('已选择提示词');
+          }
+        }
+      };
+
+      function showInstruction(category) {
+        const instruction = PROMPT_INSTRUCTIONS[category];
+        if (!instruction) return;
+
+        // 设置标题
+        ui.instructionTitle.textContent = instruction.title;
+
+        // 设置步骤
+        ui.instructionSteps.innerHTML = instruction.steps.map((step, i) => `
+          <div class="instruction-step">
+            <div class="step-number">${i + 1}</div>
+            <div class="step-content">${step}</div>
+          </div>
+        `).join('');
+
+        // 设置提示
+        ui.instructionTips.innerHTML = `
+          <div class="instruction-tips-title">操作提示</div>
+          <div class="instruction-tips-content">${instruction.tips}</div>
+        `;
+
+        // 显示弹窗
+        ui.instructionModal.classList.add('show');
+      }
+
+      window.closeInstruction = () => {
+        ui.instructionModal.classList.remove('show');
+        msg('已选择提示词，请按照说明操作');
       };
 
       function updateSizeAvailability() {
