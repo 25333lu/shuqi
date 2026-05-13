@@ -810,6 +810,156 @@
       font-size: 14px;
     }
 
+    .prompt-mode-btns {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .prompt-mode-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .prompt-mode-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .prompt-mode-btn.active {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+      font-weight: bold;
+    }
+
+    .prompt-gender-btns {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .prompt-gender-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .prompt-gender-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .prompt-gender-btn.active {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+      font-weight: bold;
+    }
+
+    .prompt-detail-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .prompt-detail-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .prompt-detail-btn:hover {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+    }
+
+    .prompt-module {
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .module-label {
+      display: block;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .module-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .module-btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .module-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .module-btn.active {
+      background: var(--accent);
+      color: #1a1a1a;
+      border-color: var(--accent);
+      font-weight: bold;
+    }
+
+    .combine-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: var(--accent);
+      color: #1a1a1a;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .combine-btn:hover {
+      filter: brightness(1.1);
+    }
+
     .prompt-list {
       display: flex;
       flex-wrap: wrap;
@@ -1012,19 +1162,75 @@
 
       <div>
         <label>内置提示词（快速选择）</label>
-        <select id="promptCategory" style="margin-bottom: 8px;">
-          <option value="">选择提示词分类...</option>
-          <option value="fashionModel">👗 服装模特</option>
-          <option value="landscape">🏔️ 风景自然</option>
-          <option value="portrait">👤 人物肖像</option>
-          <option value="animal">🦁 动物世界</option>
-          <option value="architecture">🏛️ 建筑设计</option>
-          <option value="art">🎨 艺术创作</option>
-          <option value="food">🍽️ 美食饮品</option>
-          <option value="tech">🚀 科技未来</option>
-          <option value="fantasy">🧙 奇幻想象</option>
-        </select>
-        <div id="promptList" class="prompt-list" style="display: none;"></div>
+        
+        <!-- 模式切换 -->
+        <div class="prompt-mode-btns">
+          <button class="prompt-mode-btn active" data-mode="preset" onclick="switchPromptMode('preset')">📦 直接出图</button>
+          <button class="prompt-mode-btn" data-mode="custom" onclick="switchPromptMode('custom')">🎨 自由组合</button>
+        </div>
+        
+        <!-- 直接出图模式 -->
+        <div id="presetMode" class="prompt-mode-panel">
+          <div class="prompt-gender-btns">
+            <button class="prompt-gender-btn active" data-gender="female" onclick="switchGender('female')">👩 服装模特女</button>
+            <button class="prompt-gender-btn" data-gender="male" onclick="switchGender('male')">👨 服装模特男</button>
+          </div>
+          <select id="promptTypeSelect" style="margin-top: 8px;">
+            <option value="effect">效果图</option>
+            <option value="selfie">对镜自拍</option>
+          </select>
+          <div id="promptDetailBtns" class="prompt-detail-btns" style="margin-top: 8px;"></div>
+        </div>
+        
+        <!-- 自由组合模式 -->
+        <div id="customMode" class="prompt-mode-panel" style="display: none;">
+          <!-- 人物 -->
+          <div class="prompt-module">
+            <label class="module-label">👤 人物</label>
+            <div class="module-options" id="characterOptions">
+              <button class="module-btn active" data-char="tallSlender" onclick="selectModule('character', 'tallSlender')">高挑纤细</button>
+              <button class="module-btn" data-char="pureInnocent" onclick="selectModule('character', 'pureInnocent')">纯欲风</button>
+              <button class="module-btn" data-char="elegantIntellectual" onclick="selectModule('character', 'elegantIntellectual')">优雅知性</button>
+              <button class="module-btn" data-char="youthfulCute" onclick="selectModule('character', 'youthfulCute')">幼态可爱</button>
+              <button class="module-btn" data-char="slightlyPlump" onclick="selectModule('character', 'slightlyPlump')">微胖女生</button>
+              <button class="module-btn" data-char="koreanCool" onclick="selectModule('character', 'koreanCool')">韩系清冷</button>
+            </div>
+          </div>
+          <!-- 姿势 -->
+          <div class="prompt-module">
+            <label class="module-label">💃 姿势</label>
+            <div class="module-options" id="poseOptions">
+              <button class="module-btn active" data-pose="standing" onclick="selectModule('pose', 'standing')">站立</button>
+              <button class="module-btn" data-pose="sitting" onclick="selectModule('pose', 'sitting')">坐姿</button>
+              <button class="module-btn" data-pose="walking" onclick="selectModule('pose', 'walking')">行走</button>
+              <button class="module-btn" data-pose="action" onclick="selectModule('pose', 'action')">动作</button>
+              <button class="module-btn" data-pose="relaxedPose" onclick="selectModule('pose', 'relaxedPose')">松弛握包</button>
+            </div>
+          </div>
+          <!-- 场景 -->
+          <div class="prompt-module">
+            <label class="module-label">🏞️ 场景</label>
+            <div class="module-options" id="sceneOptions">
+              <button class="module-btn active" data-scene="studio" onclick="selectModule('scene', 'studio')">摄影棚</button>
+              <button class="module-btn" data-scene="street" onclick="selectModule('scene', 'street')">街头</button>
+              <button class="module-btn" data-scene="nature" onclick="selectModule('scene', 'nature')">自然</button>
+              <button class="module-btn" data-scene="indoor" onclick="selectModule('scene', 'indoor')">室内</button>
+              <button class="module-btn" data-scene="frenchCream" onclick="selectModule('scene', 'frenchCream')">法式奶油</button>
+            </div>
+          </div>
+          <!-- 风格 -->
+          <div class="prompt-module">
+            <label class="module-label">🎨 风格</label>
+            <div class="module-options" id="styleOptions">
+              <button class="module-btn active" data-style="fashion" onclick="selectModule('style', 'fashion')">时尚</button>
+              <button class="module-btn" data-style="fresh" onclick="selectModule('style', 'fresh')">清新</button>
+              <button class="module-btn" data-style="elegant" onclick="selectModule('style', 'elegant')">优雅</button>
+              <button class="module-btn" data-style="casual" onclick="selectModule('style', 'casual')">休闲</button>
+              <button class="module-btn" data-style="koreanIns" onclick="selectModule('style', 'koreanIns')">韩系ins</button>
+            </div>
+          </div>
+          <button class="combine-btn" onclick="combinePrompt()">🎯 组合生成提示词</button>
+        </div>
       </div>
 
       <div>
@@ -1173,125 +1379,77 @@
       const historyPerPage = 10;
 
       // ====== 内置提示词数据 ======
-      const BUILTIN_PROMPTS = {
-        fashionModel: [
-          '25岁左右女模特穿着参考图1同款套装，搭配一双裸色细跟短靴既显腿长又能增加优雅感。戴着珍珠耳钉，半挽着一个丝绒小方包，整体造型温柔又显贵气。自然面对镜头站姿，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。右手持带衣架的参考图中同款上衣（与参考图一致），左手指着右手衣服，动作俏皮。左侧为黑色展示柜，柜内上方金色挂杆悬挂6件参考图中同款上衣，下方白色毛绒衬垫上摆放玫瑰花束与黑色丝绒小方包，右侧大面积落地窗，周边圣诞装饰，窗外雪景与街道景观，展示柜上方墙面投影音乐播放界面，模特站姿稍作调整，微笑弧度更柔和',
-          '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，整体造型温柔又显贵气，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。身体微微前倾，单手抬起至唇边送出飞吻，眼神带笑看向镜头，姿态娇俏甜美。在充满早春氛围的服装店内，背景有挂满装饰的摆件、落地窗外的街景与暖阳，墙面电子屏正展示同款套装海报，右侧衣架陈列着多款春夏服装，整体光线明亮温暖，充满节日氛围感。韩系画报风，高清晰度，色彩饱满，突出服装质感与人物甜美气质',
-          '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，搭配一双裸色细跟短靴既显腿长又能增加优雅感，半挽着一个丝绒小方包整体造型温柔又显贵气面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。侧身站立，温柔抚摸一只乖巧的萨摩耶犬的头部，狗狗仰头露齿微笑，一人一狗互动治愈温暖，人物眼神含笑看向镜头。简约明亮的服装店内，背景电子屏展示参考图同款套装海报，落地窗外可见早春街景与积雪，整体光线通透干净，氛围温馨治愈。治愈系时尚大片，高清画质，色彩温暖，突出服装的亲和力与场景的温馨感',
-          '场景纪实写真，女生棕黄波浪长发，搭配参考图1中同款穿搭，不要衣服上斜挎小包包包，挎着参考图1同款包包，戴着参考图1同款帽子，左手举浅色手机挡脸对着玻璃自拍，背景为城市街道（包含路边有人行道和绿化带，种植着行道树和低矮的灌木。树木的叶子看起来并不茂盛绿、行驶车辆、白色护栏、蓝色P停车指示牌、三灰色人行道与黄色盲道砖），背景中清晰可见一栋现代化的摩天大楼，玻璃幕墙呈现出蓝灰色调，具有典型的CBD（中央商务区）特征。大楼线条笔直，网格状的窗户整齐排列。自然夕阳落日光。夕阳光从人物正面（即反射面的后方）照射过来，照亮了人物的穿搭细节，衣服的纹理和质感在光照下显得非常有光泽。地面和身上有淡淡的投影，光感通透，没有强烈的阴影，非常适合展示服装颜色。8K超高清，清晰呈现面料的纹理和层次。画面风格日常随性，色调清新，随手拍，还原逛街后街边自拍的生活氛围，衣服细节和挂件保持不变',
-          '女生棕黄波浪长发，扎成侧尾麻花辫，戴着浅米色草编帽，戴着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，穿着参考图中同款鞋子，挎着同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。街道有椰子树，新人，车辆，护栏远处是沙滩，大海，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片',
-          '女生棕黄长发编成侧尾麻花辫，前面是高颅顶 带着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，不要衣服上斜挎小包包，穿着参考图中同款鞋子，拎着参考图同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。护栏后边有行走的车辆，远处是弯曲的河流，河流旁边有稀疏的油菜花，能看到一些矮房子，房子周围全是花的盆栽 花的藤蔓 绿植的藤蔓，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片'
+      // 直接出图模式数据
+      const PROMPT_DATA = {
+        effect: [
+          { name: '效果图1 - 圣诞展示柜', text: '25岁左右女模特穿着参考图1同款套装，搭配一双裸色细跟短靴既显腿长又能增加优雅感。戴着珍珠耳钉，半挽着一个丝绒小方包，整体造型温柔又显贵气。自然面对镜头站姿，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。右手持带衣架的参考图中同款上衣（与参考图一致），左手指着右手衣服，动作俏皮。左侧为黑色展示柜，柜内上方金色挂杆悬挂6件参考图中同款上衣，下方白色毛绒衬垫上摆放玫瑰花束与黑色丝绒小方包，右侧大面积落地窗，周边圣诞装饰，窗外雪景与街道景观，展示柜上方墙面投影音乐播放界面，模特站姿稍作调整，微笑弧度更柔和' },
+          { name: '效果图2 - 早春画报', text: '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，整体造型温柔又显贵气，面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。身体微微前倾，单手抬起至唇边送出飞吻，眼神带笑看向镜头，姿态娇俏甜美。在充满早春氛围的服装店内，背景有挂满装饰的摆件、落地窗外的街景与暖阳，墙面电子屏正展示同款套装海报，右侧衣架陈列着多款春夏服装，整体光线明亮温暖，充满节日氛围感。韩系画报风，高清晰度，色彩饱满，突出服装质感与人物甜美气质' },
+          { name: '效果图3 - 治愈系宠物', text: '25岁左右女模特穿着参考图1同款套装，戴着珍珠耳钉，搭配一双裸色细跟短靴既显腿长又能增加优雅感，半挽着一个丝绒小方包整体造型温柔又显贵气面部为典型的东亚女性五官，脸型是鹅蛋脸，线条流畅柔和；眼睛是大而圆的杏眼，眼型偏圆，双眼皮明显，瞳孔为深棕色，眼妆精致，睫毛纤长卷翘，卧蚕自然；眉毛是自然的平眉，眉色为深棕色，与发色一致，眉形修饰得干净利落；鼻子高挺小巧，鼻型精致；嘴唇饱满，唇形是M唇，涂着红色哑光口红，唇线清晰，嘴角平直，面部表情温婉恬静。底妆清透服帖，呈现自然的裸妆质感，肤色白皙均匀；眼妆以自然放大双眼为主，用浅棕色眼影打底，眼尾微微上扬，搭配黑色眼线和纤长睫毛；眉毛为雾眉妆效，自然不生硬；腮红淡扫在苹果肌位置，提升气色；唇妆是正红色哑光质地，无唇釉的油腻感，整体妆容偏向精致的日常妆，又带有一丝明艳感。留着中长发，发色为深棕色系的自然棕，发质柔顺有光泽；头发为偏分造型，一侧刘海自然垂落在脸颊旁，其余发丝呈大波浪卷发样式，从脸颊两侧垂至肩部，卷发弧度自然蓬松，整体发型慵懒又有层次感。侧身站立，温柔抚摸一只乖巧的萨摩耶犬的头部，狗狗仰头露齿微笑，一人一狗互动治愈温暖，人物眼神含笑看向镜头。简约明亮的服装店内，背景电子屏展示参考图同款套装海报，落地窗外可见早春街景与积雪，整体光线通透干净，氛围温馨治愈。治愈系时尚大片，高清画质，色彩温暖，突出服装的亲和力与场景的温馨感' }
         ],
-        landscape: [
-          '壮丽的山脉日出，金色阳光洒满山谷',
-          '宁静的湖泊倒影，蓝天白云映衬',
-          '神秘的森林小径，阳光透过树叶',
-          '壮观的瀑布飞流直下，彩虹环绕',
-          '广阔的草原，野花遍地，远山如黛',
-          '梦幻的极光夜空，星空璀璨',
-          '宁静的海边日落，橙红色天空',
-          '雪山冰川，晶莹剔透的蓝色冰层',
-          '热带雨林，绿意盎然，鸟语花香',
-          '沙漠绿洲，椰枣树环绕的清澈泉水'
-        ],
-        portrait: [
-          '优雅的女性肖像，柔和的光线，精致的妆容',
-          '帅气的男性肖像，坚毅的眼神，阳光帅气',
-          '可爱的儿童肖像，天真烂漫的笑容',
-          '慈祥的老人肖像，智慧的皱纹，温暖的微笑',
-          '时尚模特，前卫的造型，独特的气质',
-          '古典美人，旗袍装扮，东方韵味',
-          '运动健将，充满活力的姿态',
-          '艺术家肖像，深邃的眼神，独特的气质',
-          '职业人士，干练的形象，自信的表情',
-          '少数民族服饰，传统装扮，文化特色'
-        ],
-        animal: [
-          '威武的雄狮，金色的鬃毛，王者风范',
-          '可爱的大熊猫，憨态可掬，吃竹子',
-          '优雅的孔雀，开屏展示绚丽羽毛',
-          '矫健的猎豹，奔跑姿态，速度之美',
-          '神秘的雪豹，高山之巅，威严凝视',
-          '聪明的海豚，跃出水面，欢快嬉戏',
-          '雄伟的老鹰，展翅翱翔，蓝天背景',
-          '温顺的大象，母子同行，温情画面',
-          '灵动的蝴蝶，花间飞舞，色彩斑斓',
-          '憨厚的北极熊，冰雪世界，白色王国'
-        ],
-        architecture: [
-          '现代摩天大楼，玻璃幕墙，城市天际线',
-          '古典欧式建筑，精美雕刻，优雅拱门',
-          '中国传统建筑，飞檐翘角，红墙黄瓦',
-          '未来主义建筑，流线型设计，科技感',
-          '日式庭院建筑，枯山水，禅意空间',
-          '哥特式教堂，尖顶高耸，彩色玻璃窗',
-          '现代别墅设计，落地窗，庭院花园',
-          '古城堡建筑，石墙塔楼，历史沧桑',
-          '伊斯兰建筑，穹顶拱门，几何图案',
-          '生态建筑，绿色植物墙，可持续发展'
-        ],
-        art: [
-          '油画风格，厚重的笔触，丰富的色彩',
-          '水彩画风格，淡雅的色彩，流动的质感',
-          '素描风格，黑白线条，光影对比',
-          '印象派风格，光与色的交织',
-          '抽象艺术，几何图形，大胆配色',
-          '超现实主义，梦幻场景，奇特想象',
-          '波普艺术，鲜艳色彩，重复图案',
-          '极简主义，简洁线条，留白美学',
-          '数字艺术，科幻元素，未来感',
-          '传统国画，水墨丹青，意境深远'
-        ],
-        food: [
-          '精致的法式甜点，马卡龙色彩缤纷',
-          '诱人的牛排，焦嫩多汁，配菜精美',
-          '传统中式点心，造型精美，色香味俱全',
-          '新鲜的海鲜拼盘，色彩丰富，摆盘精致',
-          '香浓的咖啡拉花，泡沫细腻，香气四溢',
-          '日式寿司拼盘，新鲜食材，精美摆盘',
-          '意式披萨，芝士拉丝，配料丰富',
-          '清爽的水果沙拉，色彩缤纷，健康美味',
-          '传统火锅，热气腾腾，食材丰富',
-          '精致的下午茶，三层点心架，优雅氛围'
-        ],
-        tech: [
-          '未来城市，飞行汽车，全息投影',
-          '机器人世界，智能机器人，人机共存',
-          '太空站，宇航员，地球背景',
-          '赛博朋克城市，霓虹灯，雨夜',
-          '量子计算机，光子流动，科技感',
-          '虚拟现实世界，沉浸式体验，数字空间',
-          '人工智能大脑，神经网络，数据流动',
-          '未来交通工具，磁悬浮，流线型设计',
-          '智能家居，自动化系统，现代生活',
-          '生物科技，DNA双螺旋，微观世界'
-        ],
-        fantasy: [
-          '魔法森林，精灵飞舞，发光植物',
-          '巨龙翱翔，火焰喷吐，城堡背景',
-          '魔法师施法，魔法光芒，神秘符文',
-          '美人鱼公主，海底宫殿，珊瑚环绕',
-          '独角兽，彩虹森林，梦幻光芒',
-          '精灵王国，树屋城市，自然和谐',
-          '魔法城堡，悬浮空中，云雾缭绕',
-          '凤凰涅槃，火焰重生，金色光芒',
-          '矮人铁匠铺，锻造神器，火花四溅',
-          '魔法水晶球，能量流动，神秘光芒'
+        selfie: [
+          { name: '对镜自拍1 - CBD夕阳', text: '场景纪实写真，女生棕黄波浪长发，搭配参考图1中同款穿搭，不要衣服上斜挎小包包包，挎着参考图1同款包包，戴着参考图1同款帽子，左手举浅色手机挡脸对着玻璃自拍，背景为城市街道（包含路边有人行道和绿化带，种植着行道树和低矮的灌木。树木的叶子看起来并不茂盛绿、行驶车辆、白色护栏、蓝色P停车指示牌、三灰色人行道与黄色盲道砖），背景中清晰可见一栋现代化的摩天大楼，玻璃幕墙呈现出蓝灰色调，具有典型的CBD（中央商务区）特征。大楼线条笔直，网格状的窗户整齐排列。自然夕阳落日光。夕阳光从人物正面（即反射面的后方）照射过来，照亮了人物的穿搭细节，衣服的纹理和质感在光照下显得非常有光泽。地面和身上有淡淡的投影，光感通透，没有强烈的阴影，非常适合展示服装颜色。8K超高清，清晰呈现面料的纹理和层次。画面风格日常随性，色调清新，随手拍，还原逛街后街边自拍的生活氛围，衣服细节和挂件保持不变' },
+          { name: '对镜自拍2 - 海边清新', text: '女生棕黄波浪长发，扎成侧尾麻花辫，戴着浅米色草编帽，戴着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，穿着参考图中同款鞋子，挎着同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。街道有椰子树，新人，车辆，护栏远处是沙滩，大海，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片' },
+          { name: '对镜自拍3 - 田园风光', text: '女生棕黄长发编成侧尾麻花辫，前面是高颅顶 带着两个珍珠耳钉，做了美甲，穿着搭配参考图中同款穿搭，不要衣服上斜挎小包包，穿着参考图中同款鞋子，拎着参考图同款包包，模特腿细 身材完美 冷白皮 左手举浅色手机挡脸 对着玻璃自拍 突出玻璃质感，背景为脚下是浅灰色的人行道地砖，旁边还有黄色的盲道条，背景有人行道 还有P指示牌的 右边立着一根红砖墙柱子，砖缝都看得清清楚楚。再往后是一排白色的金属护栏，把人行道和马路隔开。护栏后边有行走的车辆，远处是弯曲的河流，河流旁边有稀疏的油菜花，能看到一些矮房子，房子周围全是花的盆栽 花的藤蔓 绿植的藤蔓，天空是淡淡的蓝色，天空晴朗湛蓝，画面里还带有阳光折射形成的彩虹光晕，自然氛围拉满。晴朗天气下的强自然光，让整体色调清新明亮，彩虹光晕位置稍有变化，更添灵动，既突出了穿搭的清爽风格，也显露出户外场景的舒适惬意。很清新。模特自然站立看向玻璃，记录真实生活自拍写真照片' },
+          { name: '对镜自拍4 - 韩系ins风', text: '韩系对镜自拍，竖幅中景构图，年轻温柔的韩系女生，清冷松弛感，皮肤白皙通透，纤细身形，深黑色蓬松长直发，自然中分偏一点的分缝，柔顺有光泽，伪素颜清透妆容，低饱和裸色系唇妆，自然平柔眉，淡眼妆，脸部被黑色手机挡住，看不到表情，姿态放松随性，左手举手机对镜自拍，手指自然弯曲握住手机，姿态松弛不僵硬，右手自然垂在身侧，穿着参考图中同款穿搭，穿着参考图中同款鞋子，拎着参考图中同款包包，佩戴细银项链、手表、细戒指，场景是极简风韩系服装店，米白色墙面，天花板嵌入式筒灯，柔和暖光，左侧是大落地窗，窗外是秋日雨天的街道，金黄的银杏树，湿漉漉的柏油路，背景有试衣镜、挂着浅卡其色和黑色西装的衣架，木质杂志架上摆放韩系时尚杂志，整体光影柔和自然，室内暖光和窗外清冷自然光结合，无硬阴影，高级感，治愈氛围感，写实风格，高细节，8K画质，高清摄影，手机自拍质感，真实皮肤纹理，柔和色调' }
         ]
+      };
+
+      // 自由组合模式数据
+      const MODULE_DATA = {
+        character: {
+          tallSlender: '一位身材高挑的年轻女生，冷白皮如瓷般细腻，五官精致立体——高挺鼻梁，灵动的双眼皮大眼睛，樱桃小嘴，又小又精致的脸型，脸上带着开心灿烂的笑容，眼神灵动有光。妆容清透自然，底妆轻薄服帖，眼妆以大地色晕染出柔和轮廓，唇色是淡粉裸调，整体呈现出原生感的元气。一头长发微卷，部分发丝落在脸上，阳光从侧后方形成温暖的侧逆光，打在飘起的发丝上，发丝边缘闪烁着金色的微光。',
+          pureInnocent: '25岁冷白皮女学生，纯欲风，可爱俏皮带偶像气质，戴精致发饰，妆容美甲随机，发型为中式/日式/韩式随机风格及颜色，佩戴随机饰品，皮肤白皙光滑、冷白匀净清透细腻，做可爱表情和俏皮动作，带慵懒气息，鬓角发丝自然凌乱垂落。',
+          elegantIntellectual: '20多岁的年轻东方美女，拥有白皙细腻的皮肤和精致的鹅蛋脸，妆容清透淡雅，眼妆干净柔和，唇色是温柔的红色，气质优雅又时尚。她留着一头棕色长直发，头发往一边梳自然垂落，整体穿搭干净利落又不失温柔感。她的姿态自然放松，双手自然下垂，手指轻动，眼神温柔地看向镜头，耳间佩戴着小巧的耳饰，整体散发着优雅知性的都市女性魅力。',
+          youthfulCute: '19岁东方高颜值美女，年轻娇小，幼态脸，尖下巴，三庭五眼比例标准匀称，骨相绝佳，标准网感脸；冷白皮，皮肤像陶瓷一样细腻水嫩、美白透亮，自带漫感光滑质感；化精致自然的网感妆容，搭配小巧精巧的随机饰品，五官精致立体；表情可爱灵动，摆互动式姿势，慵懒又俏皮，满是甜美氛围，侧光打造纯欲风，自带偶像气质，像温婉的江南美人',
+          slightlyPlump: '26岁微胖模特妆容清透，唇色是温柔的豆沙色，面带自然的微笑，眼神柔和地看向镜头，亲和力十足。一头微卷长发，长相甜美，鹅蛋脸线条流畅柔和，额头饱满圆润下颌角弧度自然，苹果肌饱满笑肌线条柔和，下颌收紧下巴尖圆润微翘，精致杏眼挺翘鼻梁饱满唇形，甜美温柔略带清冷。佩戴银饰发夹和珍珠耳环，可清晰的看清五官，皮肤白皙。',
+          koreanCool: '20岁左右的韩系年轻女生，清冷温柔气质，高挑纤细身材，皮肤白皙通透，黑色柔顺长直发，带自然蓬松感，偏分修饰脸型，发尾自然垂落，有健康光泽，清透伪素颜韩系淡妆，雾面哑光干净底妆，自然平眉，大地色消肿眼妆，细眼线拉长眼型，低饱和豆沙色唇妆，表情清冷淡然，眼神平静柔和直视镜头，不夸张不僵硬。柔和均匀的漫射自然光，无强烈阴影，光线明亮通透，人物面部光线均匀，皮肤质感细腻。'
+        },
+        pose: {
+          standing: '自然站立，身姿挺拔优雅，双手自然垂放身侧，面向镜头微笑。',
+          sitting: '优雅坐姿，双腿交叠，一只手轻搭在膝上，姿态放松自然。',
+          walking: '自然行走中，步伐轻盈，裙摆或衣角随风飘动，动态感十足。',
+          action: '做俏皮动作，如轻抚发丝、整理衣领、或自然抬手遮阳，表情生动活泼。',
+          relaxedPose: '一只手搭在脑后，另一只手自然握住包带，姿态松弛自然，不刻意摆拍。'
+        },
+        scene: {
+          studio: '专业摄影棚内，纯色背景布，专业摄影灯光设备，光线均匀柔和，突出人物主体。',
+          street: '城市街头，背景有现代建筑、人行道、绿植，充满都市时尚气息。',
+          nature: '户外自然环境，有花草树木、蓝天白云，阳光透过树叶洒下斑驳光影。',
+          indoor: '室内场景，简约现代的居家或咖啡厅环境，温馨舒适的氛围。',
+          frenchCream: '法式奶油风室内场景，浅米色雕花护墙板墙面，黑色拱形长虹玻璃门，浅橡木色人字拼地板，整体干净简约，无多余杂物。'
+        },
+        style: {
+          fashion: '时尚大片风格，高清晰度，色彩饱满，突出服装质感与人物气质，专业时尚杂志感。',
+          fresh: '清新自然风格，色调明亮通透，画面干净清爽，给人舒适惬意的感觉。',
+          elegant: '优雅高贵风格，光影柔和，色调温暖，展现女性的温婉与精致。',
+          casual: '休闲随性风格，日常感十足，画面自然不做作，还原真实生活场景。',
+          koreanIns: '韩系ins风，低饱和奶油色调，画面干净清爽，高级感，柔和对比度，背景轻微虚化突出人物。'
+        }
       };
 
       // 操作说明数据
       const PROMPT_INSTRUCTIONS = {
-        fashionModel: {
-          title: '👗 服装模特生成指南',
+        effect: {
+          title: '📸 效果图生成指南',
           steps: [
-            '选择您想要的模特效果图提示词（共6种不同场景）',
+            '选择您想要的效果图提示词',
             '上传清晰的服装参考图片（建议正面平铺图）',
             '图片背景建议纯色或简洁背景',
             '图片分辨率建议不低于1024×1024',
             'AI将根据提示词生成专业模特穿着效果图'
           ],
-          tips: '💡 提示：包含3个专业效果图和3个对镜自拍场景。提示词包含完整的模特描述（五官、妆容、发型、动作、场景），上传服装图片后AI会智能生成专业时尚大片效果。建议选择光线充足、细节清晰的服装图片。'
+          tips: '💡 提示：效果图系列包含完整的模特描述（五官、妆容、发型、动作、场景），上传服装图片后AI会智能生成专业时尚大片效果。建议选择光线充足、细节清晰的服装图片。'
+        },
+        selfie: {
+          title: '🤳 对镜自拍生成指南',
+          steps: [
+            '选择您想要的对镜自拍提示词',
+            '上传清晰的服装参考图片',
+            '建议上传正面平铺图或模特穿着图',
+            '图片分辨率建议不低于1024×1024',
+            'AI将生成对镜自拍风格的效果图'
+          ],
+          tips: '💡 提示：对镜自拍系列模拟真实街拍自拍场景，包含城市街道、海边、田园等背景。上传服装图片后AI会智能生成自然真实的对镜自拍效果。'
         }
       };
 
@@ -1299,8 +1457,10 @@
       const el = (id) => document.getElementById(id);
       const ui = {
         prompt: el('prompt'),
-        promptCategory: el('promptCategory'),
-        promptList: el('promptList'),
+        presetMode: el('presetMode'),
+        customMode: el('customMode'),
+        promptTypeSelect: el('promptTypeSelect'),
+        promptDetailBtns: el('promptDetailBtns'),
         instructionModal: el('instructionModal'),
         instructionTitle: el('instructionTitle'),
         instructionSteps: el('instructionSteps'),
@@ -1386,79 +1546,137 @@
       };
 
       // ====== 内置提示词功能 ======
-      ui.promptCategory.onchange = () => {
-        const category = ui.promptCategory.value;
-        if (category && BUILTIN_PROMPTS[category]) {
-          renderPromptList(category);
-          ui.promptList.style.display = 'flex';
-        } else {
-          ui.promptList.style.display = 'none';
-        }
+      // 直接出图模式
+      let currentGender = 'female';
+      let currentType = 'effect';
+
+      window.switchGender = (gender) => {
+        currentGender = gender;
+        document.querySelectorAll('.prompt-gender-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.gender === gender);
+        });
+        updateDetailBtns();
       };
 
-      function renderPromptList(category) {
-        const prompts = BUILTIN_PROMPTS[category] || [];
-        
-        // 为服装模特分类添加简短标题
-        const titles = {
-          fashionModel: [
-            '效果图1 - 圣诞展示柜', 
-            '效果图2 - 早春画报', 
-            '效果图3 - 治愈系宠物',
-            '对镜自拍1 - CBD夕阳',
-            '对镜自拍2 - 海边清新',
-            '对镜自拍3 - 田园风光'
-          ]
-        };
-        
-        ui.promptList.innerHTML = '';
-        prompts.forEach((text, i) => {
-          const displayText = titles[category] ? titles[category][i] : text.substring(0, 30) + '...';
-          const div = document.createElement('div');
-          div.className = 'prompt-item';
-          div.textContent = displayText;
-          div.onclick = () => selectPrompt(i, category);
-          ui.promptList.appendChild(div);
+      ui.promptTypeSelect.onchange = () => {
+        currentType = ui.promptTypeSelect.value;
+        updateDetailBtns();
+      };
+
+      function updateDetailBtns() {
+        const list = PROMPT_DATA[currentType] || [];
+        ui.promptDetailBtns.innerHTML = '';
+        list.forEach((item, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'prompt-detail-btn';
+          btn.textContent = item.name.split(' - ')[1] || item.name;
+          btn.onclick = () => selectPresetPrompt(i);
+          ui.promptDetailBtns.appendChild(btn);
         });
       }
 
-      window.selectPrompt = (index, category) => {
-        const prompts = BUILTIN_PROMPTS[category] || [];
-        if (prompts[index]) {
-          ui.prompt.value = prompts[index];
+      function selectPresetPrompt(index) {
+        const list = PROMPT_DATA[currentType] || [];
+        if (list[index]) {
+          ui.prompt.value = list[index].text;
           ui.prompt.focus();
-          
-          // 如果是服装模特分类，显示操作说明
-          if (category === 'fashionModel' && PROMPT_INSTRUCTIONS[category]) {
-            showInstruction(category);
-          } else {
-            msg('已选择提示词');
-          }
+          showInstruction(currentType);
         }
+      }
+
+      // 自由组合模式
+      let currentSelections = {
+        character: 'tallSlender',
+        pose: 'standing',
+        scene: 'studio',
+        style: 'fashion'
       };
 
-      function showInstruction(category) {
-        const instruction = PROMPT_INSTRUCTIONS[category];
-        if (!instruction) return;
+      window.switchPromptMode = (mode) => {
+        document.querySelectorAll('.prompt-mode-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+        ui.presetMode.style.display = mode === 'preset' ? 'block' : 'none';
+        ui.customMode.style.display = mode === 'custom' ? 'block' : 'none';
+      };
 
-        // 设置标题
+      window.selectModule = (module, value) => {
+        currentSelections[module] = value;
+        const container = document.getElementById(module + 'Options');
+        container.querySelectorAll('.module-btn').forEach(btn => {
+          // 根据模块类型获取对应的data属性
+          const dataAttr = module === 'character' ? 'data-char' : 
+                          module === 'pose' ? 'data-pose' :
+                          module === 'scene' ? 'data-scene' :
+                          module === 'style' ? 'data-style' : '';
+          const isActive = btn.getAttribute(dataAttr) === value;
+          btn.classList.toggle('active', isActive);
+        });
+      };
+
+      window.combinePrompt = () => {
+        const character = MODULE_DATA.character[currentSelections.character];
+        const pose = MODULE_DATA.pose[currentSelections.pose];
+        const scene = MODULE_DATA.scene[currentSelections.scene];
+        const style = MODULE_DATA.style[currentSelections.style];
+        
+        const combinedPrompt = `穿着参考图同款服装，${character}${pose}${scene}${style}`;
+        
+        ui.prompt.value = combinedPrompt;
+        ui.prompt.focus();
+        
+        // 显示组合提示
+        const instruction = {
+          title: '🎨 自由组合提示词',
+          steps: [
+            `人物：${getModuleLabel('character', currentSelections.character)}`,
+            `姿势：${getModuleLabel('pose', currentSelections.pose)}`,
+            `场景：${getModuleLabel('scene', currentSelections.scene)}`,
+            `风格：${getModuleLabel('style', currentSelections.style)}`,
+            '提示词已生成，请上传服装参考图片'
+          ],
+          tips: '💡 提示：自由组合模式可以根据您的需求灵活搭配人物、姿势、场景和风格。上传清晰的服装图片后，AI会根据您的组合生成定制化的模特效果图。'
+        };
+        
         ui.instructionTitle.textContent = instruction.title;
-
-        // 设置步骤
         ui.instructionSteps.innerHTML = instruction.steps.map((step, i) => `
           <div class="instruction-step">
             <div class="step-number">${i + 1}</div>
             <div class="step-content">${step}</div>
           </div>
         `).join('');
-
-        // 设置提示
         ui.instructionTips.innerHTML = `
           <div class="instruction-tips-title">操作提示</div>
           <div class="instruction-tips-content">${instruction.tips}</div>
         `;
+        ui.instructionModal.classList.add('show');
+      };
 
-        // 显示弹窗
+      function getModuleLabel(module, value) {
+        const labels = {
+          character: { tallSlender: '高挑纤细', pureInnocent: '纯欲风', elegantIntellectual: '优雅知性', youthfulCute: '幼态可爱', slightlyPlump: '微胖女生', koreanCool: '韩系清冷' },
+          pose: { standing: '站立', sitting: '坐姿', walking: '行走', action: '动作', relaxedPose: '松弛握包' },
+          scene: { studio: '摄影棚', street: '街头', nature: '自然', indoor: '室内', frenchCream: '法式奶油' },
+          style: { fashion: '时尚', fresh: '清新', elegant: '优雅', casual: '休闲', koreanIns: '韩系ins' }
+        };
+        return labels[module]?.[value] || value;
+      }
+
+      function showInstruction(type) {
+        const instruction = PROMPT_INSTRUCTIONS[type];
+        if (!instruction) { msg('已选择提示词'); return; }
+
+        ui.instructionTitle.textContent = instruction.title;
+        ui.instructionSteps.innerHTML = instruction.steps.map((step, i) => `
+          <div class="instruction-step">
+            <div class="step-number">${i + 1}</div>
+            <div class="step-content">${step}</div>
+          </div>
+        `).join('');
+        ui.instructionTips.innerHTML = `
+          <div class="instruction-tips-title">操作提示</div>
+          <div class="instruction-tips-content">${instruction.tips}</div>
+        `;
         ui.instructionModal.classList.add('show');
       }
 
@@ -1466,6 +1684,9 @@
         ui.instructionModal.classList.remove('show');
         msg('已选择提示词，请按照说明操作');
       };
+
+      // 初始化
+      updateDetailBtns();
 
       function updateSizeAvailability() {
         const isGptImage = ui.model.value === 'gpt-image-2';
