@@ -1184,38 +1184,62 @@
         
         <!-- 自由组合模式 -->
         <div id="customMode" class="prompt-mode-panel" style="display: none;">
+          <!-- 构图 -->
+          <div class="prompt-module">
+            <label class="module-label">📐 构图</label>
+            <div class="module-options" id="compositionOptions">
+              <button class="module-btn active" data-composition="eyeLevel" onclick="selectModule('composition', 'eyeLevel')">平视全身</button>
+              <button class="module-btn" data-composition="lowAngle" onclick="selectModule('composition', 'lowAngle')">低角度仰拍</button>
+            </div>
+          </div>
+          <!-- 光影 -->
+          <div class="prompt-module">
+            <label class="module-label">☀️ 光影</label>
+            <div class="module-options" id="lightingOptions">
+              <button class="module-btn active" data-lighting="goldenBacklight" onclick="selectModule('lighting', 'goldenBacklight')">黄金侧逆光</button>
+              <button class="module-btn" data-lighting="sunnyFront" onclick="selectModule('lighting', 'sunnyFront')">晴天顺光</button>
+            </div>
+          </div>
           <!-- 人物 -->
           <div class="prompt-module">
             <label class="module-label">👤 人物</label>
             <div class="module-options" id="characterOptions">
-              <button class="module-btn active" data-char="tallSlender" onclick="selectModule('character', 'tallSlender')">高挑纤细</button>
-              <button class="module-btn" data-char="pureInnocent" onclick="selectModule('character', 'pureInnocent')">纯欲风</button>
-              <button class="module-btn" data-char="elegantIntellectual" onclick="selectModule('character', 'elegantIntellectual')">优雅知性</button>
-              <button class="module-btn" data-char="youthfulCute" onclick="selectModule('character', 'youthfulCute')">幼态可爱</button>
-              <button class="module-btn" data-char="slightlyPlump" onclick="selectModule('character', 'slightlyPlump')">微胖女生</button>
-              <button class="module-btn" data-char="koreanCool" onclick="selectModule('character', 'koreanCool')">韩系清冷</button>
+              <button class="module-btn active" data-character="tallSlender" onclick="selectModule('character', 'tallSlender')">高挑纤细</button>
+              <button class="module-btn" data-character="pureInnocent" onclick="selectModule('character', 'pureInnocent')">纯欲风</button>
+              <button class="module-btn" data-character="elegantIntellectual" onclick="selectModule('character', 'elegantIntellectual')">优雅知性</button>
+              <button class="module-btn" data-character="youthfulCute" onclick="selectModule('character', 'youthfulCute')">幼态可爱</button>
+              <button class="module-btn" data-character="slightlyPlump" onclick="selectModule('character', 'slightlyPlump')">微胖女生</button>
+              <button class="module-btn" data-character="koreanCool" onclick="selectModule('character', 'koreanCool')">韩系清冷</button>
             </div>
           </div>
           <!-- 姿势 -->
           <div class="prompt-module">
             <label class="module-label">💃 姿势</label>
             <div class="module-options" id="poseOptions">
-              <button class="module-btn active" data-pose="standing" onclick="selectModule('pose', 'standing')">站立</button>
-              <button class="module-btn" data-pose="sitting" onclick="selectModule('pose', 'sitting')">坐姿</button>
-              <button class="module-btn" data-pose="walking" onclick="selectModule('pose', 'walking')">行走</button>
-              <button class="module-btn" data-pose="action" onclick="selectModule('pose', 'action')">动作</button>
+              <button class="module-btn active" data-pose="peaceSign" onclick="selectModule('pose', 'peaceSign')">正面剪刀手</button>
               <button class="module-btn" data-pose="relaxedPose" onclick="selectModule('pose', 'relaxedPose')">松弛握包</button>
+              <button class="module-btn" data-pose="touchCheek" onclick="selectModule('pose', 'touchCheek')">触脸颊叉腰</button>
+              <button class="module-btn" data-pose="openArms" onclick="selectModule('pose', 'openArms')">张开双臂</button>
+              <button class="module-btn" data-pose="oneLegCamera" onclick="selectModule('pose', 'oneLegCamera')">单脚捧相机</button>
+              <button class="module-btn" data-pose="oneLegTouchCheek" onclick="selectModule('pose', 'oneLegTouchCheek')">单脚触脸颊举相机</button>
+              <button class="module-btn" data-pose="flowerOverhead" onclick="selectModule('pose', 'flowerOverhead')">举花束歪头</button>
+              <button class="module-btn" data-pose="flowerAndBag" onclick="selectModule('pose', 'flowerAndBag')">拿花束拎包</button>
+              <button class="module-btn" data-pose="liftSkirtFlower" onclick="selectModule('pose', 'liftSkirtFlower')">提裙拎花束</button>
+              <button class="module-btn" data-pose="vSignCoffee" onclick="selectModule('pose', 'vSignCoffee')">高举V字握咖啡</button>
+              <button class="module-btn" data-pose="sideTouchHair" onclick="selectModule('pose', 'sideTouchHair')">侧身扶发</button>
+              <button class="module-btn" data-pose="sitWallCoffee" onclick="selectModule('pose', 'sitWallCoffee')">坐石墙握咖啡</button>
+              <button class="module-btn" data-pose="leanForwardBag" onclick="selectModule('pose', 'leanForwardBag')">前倾握包带</button>
+              <button class="module-btn" data-pose="stepTouchBranch" onclick="selectModule('pose', 'stepTouchBranch')">迈步触树枝抱外套</button>
             </div>
           </div>
           <!-- 场景 -->
           <div class="prompt-module">
             <label class="module-label">🏞️ 场景</label>
             <div class="module-options" id="sceneOptions">
-              <button class="module-btn active" data-scene="studio" onclick="selectModule('scene', 'studio')">摄影棚</button>
-              <button class="module-btn" data-scene="street" onclick="selectModule('scene', 'street')">街头</button>
-              <button class="module-btn" data-scene="nature" onclick="selectModule('scene', 'nature')">自然</button>
-              <button class="module-btn" data-scene="indoor" onclick="selectModule('scene', 'indoor')">室内</button>
-              <button class="module-btn" data-scene="frenchCream" onclick="selectModule('scene', 'frenchCream')">法式奶油</button>
+              <button class="module-btn active" data-scene="frenchCream" onclick="selectModule('scene', 'frenchCream')">法式奶油</button>
+              <button class="module-btn" data-scene="parkPath" onclick="selectModule('scene', 'parkPath')">公园步道</button>
+              <button class="module-btn" data-scene="parkLawn" onclick="selectModule('scene', 'parkLawn')">公园草坪</button>
+              <button class="module-btn" data-scene="stoneWallSky" onclick="selectModule('scene', 'stoneWallSky')">石墙蓝天</button>
             </div>
           </div>
           <!-- 风格 -->
@@ -1227,6 +1251,7 @@
               <button class="module-btn" data-style="elegant" onclick="selectModule('style', 'elegant')">优雅</button>
               <button class="module-btn" data-style="casual" onclick="selectModule('style', 'casual')">休闲</button>
               <button class="module-btn" data-style="koreanIns" onclick="selectModule('style', 'koreanIns')">韩系ins</button>
+              <button class="module-btn" data-style="outdoorIns" onclick="selectModule('style', 'outdoorIns')">户外ins风</button>
             </div>
           </div>
           <button class="combine-btn" onclick="combinePrompt()">🎯 组合生成提示词</button>
@@ -1394,36 +1419,59 @@
         ]
       };
 
-      // 自由组合模式数据
+      // 自由组合模式 - 通用模板（每次都包含）
+      const UNIVERSAL_TEMPLATE = {
+        clothing: '穿着参考图中同款穿搭，穿着参考图中同款鞋子，拎着参考图中同款包包，',
+        quality: '背景虚化柔和突出人物，画面干净清爽无杂乱元素，超高清细节，8K画质，高清摄影，真实皮肤纹理，衣物面料质感真实，发丝细节清晰，发丝细腻可见有自然光泽感，发质柔顺有层次感，皮肤细腻真实有自然纹理，肤色白皙均匀，底妆轻薄服帖，眼神灵动有光，表情自然松弛不僵硬。'
+      };
+
+      // 自由组合模式 - 可选数据
       const MODULE_DATA = {
+        composition: {
+          eyeLevel: '中心对称式竖幅构图，人物位于画面正中央，是绝对的视觉焦点，平视全身照视角，人物与镜头高度接近，画面稳定舒展，前景中景背景层次分明。',
+          lowAngle: '低角度仰拍竖幅构图，人物位于画面正中央，低角度仰拍让人物显得高挑挺拔，以蓝天为背景弱化地面干扰，画面层次感和纵深感极强，构图干净利落，视觉冲击力强。'
+        },
+        lighting: {
+          goldenBacklight: '黄金时段侧逆光，光线从人物后方偏上照射，给头发和肩膀勾勒出柔和的金边轮廓光，让人物和背景分离更有立体感，整体光线温暖柔和明亮，色调偏暖白，没有强烈硬阴影，地面和背景有树叶投下的斑驳光影，增强画面层次感，整体曝光柔和，皮肤通透，色彩饱和度适中。',
+          sunnyFront: '晴天顺光效果，光线明亮充足，整体画面曝光均匀，人物和衣物的细节都清晰可见，阳光在人物身上形成柔和的阴影，没有强烈的明暗对比，皮肤和衣物的质感都被很好地表现出来，整体色调干净明快，清新治愈。'
+        },
         character: {
-          tallSlender: '一位身材高挑的年轻女生，冷白皮如瓷般细腻，五官精致立体——高挺鼻梁，灵动的双眼皮大眼睛，樱桃小嘴，又小又精致的脸型，脸上带着开心灿烂的笑容，眼神灵动有光。妆容清透自然，底妆轻薄服帖，眼妆以大地色晕染出柔和轮廓，唇色是淡粉裸调，整体呈现出原生感的元气。一头长发微卷，部分发丝落在脸上，阳光从侧后方形成温暖的侧逆光，打在飘起的发丝上，发丝边缘闪烁着金色的微光。',
+          tallSlender: '一位身材高挑的年轻女生，冷白皮如瓷般细腻，五官精致立体——高挺鼻梁，灵动的双眼皮大眼睛，樱桃小嘴，又小又精致的脸型，脸上带着开心灿烂的笑容，眼神灵动有光。妆容清透自然，底妆轻薄服帖，眼妆以大地色晕染出柔和轮廓，唇色是淡粉裸调，整体呈现出原生感的元气。一头长发微卷，部分发丝落在脸上，发丝边缘闪烁着金色的微光。',
           pureInnocent: '25岁冷白皮女学生，纯欲风，可爱俏皮带偶像气质，戴精致发饰，妆容美甲随机，发型为中式/日式/韩式随机风格及颜色，佩戴随机饰品，皮肤白皙光滑、冷白匀净清透细腻，做可爱表情和俏皮动作，带慵懒气息，鬓角发丝自然凌乱垂落。',
           elegantIntellectual: '20多岁的年轻东方美女，拥有白皙细腻的皮肤和精致的鹅蛋脸，妆容清透淡雅，眼妆干净柔和，唇色是温柔的红色，气质优雅又时尚。她留着一头棕色长直发，头发往一边梳自然垂落，整体穿搭干净利落又不失温柔感。她的姿态自然放松，双手自然下垂，手指轻动，眼神温柔地看向镜头，耳间佩戴着小巧的耳饰，整体散发着优雅知性的都市女性魅力。',
           youthfulCute: '19岁东方高颜值美女，年轻娇小，幼态脸，尖下巴，三庭五眼比例标准匀称，骨相绝佳，标准网感脸；冷白皮，皮肤像陶瓷一样细腻水嫩、美白透亮，自带漫感光滑质感；化精致自然的网感妆容，搭配小巧精巧的随机饰品，五官精致立体；表情可爱灵动，摆互动式姿势，慵懒又俏皮，满是甜美氛围，侧光打造纯欲风，自带偶像气质，像温婉的江南美人',
           slightlyPlump: '26岁微胖模特妆容清透，唇色是温柔的豆沙色，面带自然的微笑，眼神柔和地看向镜头，亲和力十足。一头微卷长发，长相甜美，鹅蛋脸线条流畅柔和，额头饱满圆润下颌角弧度自然，苹果肌饱满笑肌线条柔和，下颌收紧下巴尖圆润微翘，精致杏眼挺翘鼻梁饱满唇形，甜美温柔略带清冷。佩戴银饰发夹和珍珠耳环，可清晰的看清五官，皮肤白皙。',
-          koreanCool: '20岁左右的韩系年轻女生，清冷温柔气质，高挑纤细身材，皮肤白皙通透，黑色柔顺长直发，带自然蓬松感，偏分修饰脸型，发尾自然垂落，有健康光泽，清透伪素颜韩系淡妆，雾面哑光干净底妆，自然平眉，大地色消肿眼妆，细眼线拉长眼型，低饱和豆沙色唇妆，表情清冷淡然，眼神平静柔和直视镜头，不夸张不僵硬。柔和均匀的漫射自然光，无强烈阴影，光线明亮通透，人物面部光线均匀，皮肤质感细腻。'
+          koreanCool: '20岁左右的韩系年轻女生，清冷温柔气质，高挑纤细身材，皮肤白皙通透，黑色柔顺长直发，带自然蓬松感，偏分修饰脸型，发尾自然垂落，有健康光泽，清透伪素颜韩系淡妆，雾面哑光干净底妆，自然平眉，大地色消肿眼妆，细眼线拉长眼型，低饱和豆沙色唇妆，表情清冷淡然，眼神平静柔和直视镜头，不夸张不僵硬。'
         },
         pose: {
-          standing: '自然站立，身姿挺拔优雅，双手自然垂放身侧，面向镜头微笑。',
-          sitting: '优雅坐姿，双腿交叠，一只手轻搭在膝上，姿态放松自然。',
-          walking: '自然行走中，步伐轻盈，裙摆或衣角随风飘动，动态感十足。',
-          action: '做俏皮动作，如轻抚发丝、整理衣领、或自然抬手遮阳，表情生动活泼。',
-          relaxedPose: '一只手搭在脑后，另一只手自然握住包带，姿态松弛自然，不刻意摆拍。'
+          peaceSign: '正面站立，双手在身体两侧比剪刀手，双脚并拢，站姿自然放松，表情甜美元气。',
+          relaxedPose: '一只手搭在脑后，另一只手自然握住包带，姿态松弛自然，不刻意摆拍。',
+          touchCheek: '正面站立，右手抬起轻触脸颊，左手自然叉腰，双脚并拢，站姿放松优雅，温柔氛围感。',
+          openArms: '正面站立，双臂向身体两侧完全张开，手掌自然摊开，双脚并拢，姿态舒展开放，仿佛在拥抱阳光，充满元气和松弛感。',
+          oneLegCamera: '单脚站立，右脚抬起向后翘起，双手捧着一台复古相机，姿态俏皮灵动，充满少女感。',
+          oneLegTouchCheek: '单脚站立，右脚抬起向后翘起，右手轻触脸颊，左手举着一台复古相机，姿态俏皮灵动，充满少女感。',
+          flowerOverhead: '正面站立，双手举着一束粉色花束举过头顶，歪头看向镜头，姿态俏皮灵动，打破穿搭的酷感。',
+          flowerAndBag: '正面站立，左手拿着一束混色花束，右手拎着链条包，姿态自然舒展，随性又有松弛感。',
+          liftSkirtFlower: '正面站立，身体微微侧转，右手轻轻提起裙子的一角，左手拎着花束和包包，姿态自然随性，很有松弛感。',
+          vSignCoffee: '双臂向上高高举起，双手比出V字手势，一手握着咖啡杯，身体微微放松，是毫无束缚的舒展姿态，自带拥抱蓝天的自由感。',
+          sideTouchHair: '侧身站立，一只手轻扶头顶的头发，另一只手自然垂落，姿态舒展放松，日常随拍的慵懒氛围感姿势。',
+          sitWallCoffee: '侧身坐在石墙上，一只手撑在石墙上，另一只手握着咖啡杯，双腿自然垂落，姿态慵懒放松，充满日常随拍的氛围感。',
+          leanForwardBag: '身体微微前倾，一手握着包的包带，姿态放松自然，像是在和镜头打招呼，充满日常随拍的氛围感。',
+          stepTouchBranch: '迈步侧身站立，一只手抱着外套，另一只手轻触树枝，姿态舒展又充满生活感，侧脸抬头望向树枝，眼神柔和放空。'
         },
         scene: {
-          studio: '专业摄影棚内，纯色背景布，专业摄影灯光设备，光线均匀柔和，突出人物主体。',
-          street: '城市街头，背景有现代建筑、人行道、绿植，充满都市时尚气息。',
-          nature: '户外自然环境，有花草树木、蓝天白云，阳光透过树叶洒下斑驳光影。',
-          indoor: '室内场景，简约现代的居家或咖啡厅环境，温馨舒适的氛围。',
-          frenchCream: '法式奶油风室内场景，浅米色雕花护墙板墙面，黑色拱形长虹玻璃门，浅橡木色人字拼地板，整体干净简约，无多余杂物。'
+          frenchCream: '法式奶油风室内场景，浅米色雕花护墙板墙面，黑色拱形长虹玻璃门，浅橡木色人字拼地板，整体干净简约，无多余杂物。',
+          parkPath: '城市公园户外场景，深灰色柏油步道，步道边缘有白色路缘石，两侧是修剪整齐的翠绿草坪，背景是茂密的阔叶树林，阳光透过树叶洒下斑驳光影，清新治愈的日系公园风格。',
+          parkLawn: '城市公园户外场景，茂密翠绿的草坪，阳光在草地上投射出斑驳的光影，背景是高大茂密的阔叶树林，远处隐约可见城市建筑，清新治愈的韩系公园风格。',
+          stoneWallSky: '户外自然场景，粗糙的石砌矮墙，墙面有明显的纹理和裂痕，上方有粗壮的树枝和垂下的气根，背景是晴朗无云的湛蓝色天空，远处隐约可见连绵的山脉轮廓，极简治愈风，以纯净蓝天为主背景，画面干净清爽。'
         },
         style: {
-          fashion: '时尚大片风格，高清晰度，色彩饱满，突出服装质感与人物气质，专业时尚杂志感。',
+          fashion: '时尚大片风格，色彩饱满，突出服装质感与人物气质，专业时尚杂志感。',
           fresh: '清新自然风格，色调明亮通透，画面干净清爽，给人舒适惬意的感觉。',
           elegant: '优雅高贵风格，光影柔和，色调温暖，展现女性的温婉与精致。',
           casual: '休闲随性风格，日常感十足，画面自然不做作，还原真实生活场景。',
-          koreanIns: '韩系ins风，低饱和奶油色调，画面干净清爽，高级感，柔和对比度，背景轻微虚化突出人物。'
+          koreanIns: '韩系ins风，低饱和奶油色调，画面干净清爽，高级感，柔和对比度。',
+          outdoorIns: '户外ins风，极简治愈风，纯净蓝天背景，松弛高级，清新又有活力，自带日常胶片感。'
         }
       };
 
@@ -1586,9 +1634,11 @@
 
       // 自由组合模式
       let currentSelections = {
+        composition: 'eyeLevel',
+        lighting: 'goldenBacklight',
         character: 'tallSlender',
-        pose: 'standing',
-        scene: 'studio',
+        pose: 'peaceSign',
+        scene: 'frenchCream',
         style: 'fashion'
       };
 
@@ -1604,23 +1654,23 @@
         currentSelections[module] = value;
         const container = document.getElementById(module + 'Options');
         container.querySelectorAll('.module-btn').forEach(btn => {
-          // 根据模块类型获取对应的data属性
-          const dataAttr = module === 'character' ? 'data-char' : 
-                          module === 'pose' ? 'data-pose' :
-                          module === 'scene' ? 'data-scene' :
-                          module === 'style' ? 'data-style' : '';
+          const dataAttr = 'data-' + module;
           const isActive = btn.getAttribute(dataAttr) === value;
           btn.classList.toggle('active', isActive);
         });
       };
 
       window.combinePrompt = () => {
+        const composition = MODULE_DATA.composition[currentSelections.composition];
+        const lighting = MODULE_DATA.lighting[currentSelections.lighting];
         const character = MODULE_DATA.character[currentSelections.character];
+        const clothing = UNIVERSAL_TEMPLATE.clothing;
         const pose = MODULE_DATA.pose[currentSelections.pose];
         const scene = MODULE_DATA.scene[currentSelections.scene];
         const style = MODULE_DATA.style[currentSelections.style];
+        const quality = UNIVERSAL_TEMPLATE.quality;
         
-        const combinedPrompt = `穿着参考图同款服装，${character}${pose}${scene}${style}`;
+        const combinedPrompt = `${composition}${character}${clothing}${pose}${scene}${lighting}${style}${quality}`;
         
         ui.prompt.value = combinedPrompt;
         ui.prompt.focus();
@@ -1629,13 +1679,15 @@
         const instruction = {
           title: '🎨 自由组合提示词',
           steps: [
+            `构图：${getModuleLabel('composition', currentSelections.composition)}`,
+            `光影：${getModuleLabel('lighting', currentSelections.lighting)}`,
             `人物：${getModuleLabel('character', currentSelections.character)}`,
             `姿势：${getModuleLabel('pose', currentSelections.pose)}`,
             `场景：${getModuleLabel('scene', currentSelections.scene)}`,
             `风格：${getModuleLabel('style', currentSelections.style)}`,
             '提示词已生成，请上传服装参考图片'
           ],
-          tips: '💡 提示：自由组合模式可以根据您的需求灵活搭配人物、姿势、场景和风格。上传清晰的服装图片后，AI会根据您的组合生成定制化的模特效果图。'
+          tips: '💡 提示：自由组合模式可以灵活搭配构图、光影、人物、姿势、场景和风格。上传清晰的服装图片后，AI会根据您的组合生成定制化的模特效果图。'
         };
         
         ui.instructionTitle.textContent = instruction.title;
@@ -1654,10 +1706,12 @@
 
       function getModuleLabel(module, value) {
         const labels = {
+          composition: { eyeLevel: '平视全身', lowAngle: '低角度仰拍' },
+          lighting: { goldenBacklight: '黄金侧逆光', sunnyFront: '晴天顺光' },
           character: { tallSlender: '高挑纤细', pureInnocent: '纯欲风', elegantIntellectual: '优雅知性', youthfulCute: '幼态可爱', slightlyPlump: '微胖女生', koreanCool: '韩系清冷' },
-          pose: { standing: '站立', sitting: '坐姿', walking: '行走', action: '动作', relaxedPose: '松弛握包' },
-          scene: { studio: '摄影棚', street: '街头', nature: '自然', indoor: '室内', frenchCream: '法式奶油' },
-          style: { fashion: '时尚', fresh: '清新', elegant: '优雅', casual: '休闲', koreanIns: '韩系ins' }
+          pose: { peaceSign: '正面剪刀手', relaxedPose: '松弛握包', touchCheek: '触脸颊叉腰', openArms: '张开双臂', oneLegCamera: '单脚捧相机', oneLegTouchCheek: '单脚触脸颊举相机', flowerOverhead: '举花束歪头', flowerAndBag: '拿花束拎包', liftSkirtFlower: '提裙拎花束', vSignCoffee: '高举V字握咖啡', sideTouchHair: '侧身扶发', sitWallCoffee: '坐石墙握咖啡', leanForwardBag: '前倾握包带', stepTouchBranch: '迈步触树枝抱外套' },
+          scene: { frenchCream: '法式奶油', parkPath: '公园步道', parkLawn: '公园草坪', stoneWallSky: '石墙蓝天' },
+          style: { fashion: '时尚', fresh: '清新', elegant: '优雅', casual: '休闲', koreanIns: '韩系ins', outdoorIns: '户外ins风' }
         };
         return labels[module]?.[value] || value;
       }
