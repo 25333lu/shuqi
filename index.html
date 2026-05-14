@@ -1294,6 +1294,15 @@
           <option value="4K" selected>4K 超清</option>
         </select>
       </div>
+      <div class="inline-row">
+        <label>生成数量</label>
+        <select id="countSelect">
+          <option value="1" selected>1 张</option>
+          <option value="2">2 张</option>
+          <option value="3">3 张</option>
+          <option value="4">4 张</option>
+        </select>
+      </div>
 
       <div>
         <label>参考图片或要编辑的图片（可选）</label>
@@ -1421,8 +1430,7 @@
 
       // 自由组合模式 - 通用模板（每次都包含）
       const UNIVERSAL_TEMPLATE = {
-        clothing: '穿着参考图中同款穿搭，穿着参考图中同款鞋子，拎着参考图中同款包包，',
-        quality: '背景虚化柔和突出人物，画面干净清爽无杂乱元素，超高清细节，8K画质，高清摄影，真实皮肤纹理，衣物面料质感真实，发丝细节清晰，发丝细腻可见有自然光泽感，发质柔顺有层次感，皮肤细腻真实有自然纹理，肤色白皙均匀，底妆轻薄服帖，眼神灵动有光，表情自然松弛不僵硬。'
+        quality: '背景虚化柔和突出人物，画面干净清爽无杂乱元素，超高清细节，8K画质，高清摄影，真实皮肤纹理，衣物面料质感真实，发丝细节清晰，发丝细腻可见有自然光泽感，发质柔顺有层次感，皮肤细腻真实有自然纹理，肤色白皙均匀，底妆轻薄服帖，眼神灵动有光，表情自然松弛不僵硬，超写实手部细节，解剖学正确的双手，手指关节清晰自然，无畸形手指，无多手指，无融合手指，皮肤纹理真实可见，指甲形态自然，光线均匀地勾勒手指轮廓，手部光影过渡自然，手部比例协调，真实人类手部，无AI错误。'
       };
 
       // 自由组合模式 - 可选数据
@@ -1516,6 +1524,7 @@
         model: el('modelSelect'),
         ratio: el('ratioSelect'),
         size: el('sizeSelect'),
+        count: el('countSelect'),
         key: el('userKey'),
         saveKey: el('saveKey'),
         queryCredits: el('queryCredits'),
@@ -1664,11 +1673,16 @@
         const composition = MODULE_DATA.composition[currentSelections.composition];
         const lighting = MODULE_DATA.lighting[currentSelections.lighting];
         const character = MODULE_DATA.character[currentSelections.character];
-        const clothing = UNIVERSAL_TEMPLATE.clothing;
         const pose = MODULE_DATA.pose[currentSelections.pose];
         const scene = MODULE_DATA.scene[currentSelections.scene];
         const style = MODULE_DATA.style[currentSelections.style];
         const quality = UNIVERSAL_TEMPLATE.quality;
+        
+        // 根据姿势判断是否提包（双手张开的姿势不需要提包）
+        const noBagPoses = ['openArms', 'vSignCoffee'];
+        const clothing = noBagPoses.includes(currentSelections.pose) 
+          ? '穿着参考图中同款穿搭，穿着参考图中同款鞋子，'
+          : '穿着参考图中同款穿搭，穿着参考图中同款鞋子，拎着参考图中同款包包，';
         
         const combinedPrompt = `${composition}${character}${clothing}${pose}${scene}${lighting}${style}${quality}`;
         
@@ -1964,256 +1978,212 @@
 
       // ====== Helper Methods (Removed Poll) ======
 
-      // ====== 核心：生成请求 (同步模式) ======
-      ui.go.onclick = async () => {
-        const prompt = ui.prompt.value.trim();
-        const key = ui.key.value.trim();
-        const model = ui.model.value || 'gemini-3.1-flash-image-preview';
+      // ====== 单次生成请求 ======
+      async function singleGenerate(prompt, key, model, index, total) {
+        let endpoint = 'https://grsai.dakka.com.cn/v1/draw/completions';
+        let payload = {};
+        let options = {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + key,
+            'Content-Type': 'application/json'
+          }
+        };
 
-        if (!prompt) return msg('请输入一些描述...', true);
-        if (!key) return msg('请填写 Key', true);
-
-        setLoading(true);
-        msg('正在生成，请耐心等待...');
-
-        const taskId = Date.now().toString();
-        addHistoryItem(taskId, 'pending', [], prompt);
-
-        try {
-          let ratio = ui.ratio.value;
-          let imgSize = "1024x1024";
-          if (ratio === '16:9' || ratio === '3:2' || ratio === '4:3') imgSize = '1536x1024';
-          else if (ratio === '9:16' || ratio === '2:3' || ratio === '3:4') imgSize = '1024x1536';
-          else if (ratio === '1:1') imgSize = '1024x1024';
-          else imgSize = '1024x1024'; // fallback
-
-          let endpoint = 'https://grsai.dakka.com.cn/v1/draw/completions';
-          let payload = {};
-          let options = {
-            method: 'POST',
-            headers: {
-              'Authorization': 'Bearer ' + key,
-              'Content-Type': 'application/json'
-            }
+        if (model === 'nano-banana-pro') {
+          endpoint = 'https://grsai.dakka.com.cn/v1/draw/nano-banana';
+          payload = {
+            model: model,
+            prompt: prompt,
+            aspectRatio: ui.ratio.value === '1:1' ? '1:1' : (ui.ratio.value || 'auto'), 
+            imageSize: ui.size.value || '1K',
+            webHook: "-1",
+            shutProgress: false
           };
 
-          if (model === 'nano-banana-pro') {
-            endpoint = 'https://grsai.dakka.com.cn/v1/draw/nano-banana';
-            
-            // 对 nano-banana-pro 拼接参数
-            payload = {
-              model: model,
-              prompt: prompt,
-              aspectRatio: ui.ratio.value === '1:1' ? '1:1' : (ui.ratio.value || 'auto'), 
-              imageSize: ui.size.value || '1K',
-              webHook: "-1",
-              shutProgress: false
-            };
-
-            // 如果有参考图，需要放入 urls 数组 (支持 Base64 或 URL)
-            if (rawFiles.length > 0) {
-              const base64Url = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(rawFiles[0]);
-              });
-              payload.urls = [base64Url];
-            }
-          } else {
-            payload = {
-              model: model,
-              prompt: prompt,
-              aspectRatio: ui.ratio.value, // 1:1, 16:9, 3:2 etc.
-              size: ui.size.value, // 1K, 2K, 4K
-              webHook: "-1" // 强制接口立即返回任务id用于轮询
-            };
-
-            if (rawFiles.length > 0) {
-              const base64Url = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(rawFiles[0]);
-              });
-              payload.urls = [base64Url];
-            }
+          if (rawFiles.length > 0) {
+            const base64Url = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result);
+              reader.readAsDataURL(rawFiles[0]);
+            });
+            payload.urls = [base64Url];
           }
+        } else {
+          payload = {
+            model: model,
+            prompt: prompt,
+            aspectRatio: ui.ratio.value,
+            size: ui.size.value,
+            webHook: "-1"
+          };
 
-          options.body = JSON.stringify(payload);
-
-          const res = await fetch(endpoint, options);
-          if (!res.ok) {
-            let errMessage = `HTTP ${res.status}`;
-            try {
-              const errData = await res.json();
-              console.error("API 响应错误详情:", errData);
-              if (errData.error && errData.error.message) errMessage = errData.error.message;
-              else if (errData.message) errMessage = errData.message;
-              else if (errData.msg) errMessage = errData.msg; // 添加对 msg 字段的兼容
-              else errMessage = JSON.stringify(errData); // 如果没有标准错误字段，则输出完整错误信息
-            } catch (e) { }
-            
-            if (errMessage.includes('experiencing high demand') || res.status === 429) {
-               errMessage = `系统当前高负载（API请求过快或并发过高），请稍后重试。\n详细: ${errMessage}`;
-            }
-            throw new Error(errMessage);
+          if (rawFiles.length > 0) {
+            const base64Url = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target.result);
+              reader.readAsDataURL(rawFiles[0]);
+            });
+            payload.urls = [base64Url];
           }
+        }
 
-          let urls = [];
-          let rawResponseDebug = [];
+        options.body = JSON.stringify(payload);
+
+        const res = await fetch(endpoint, options);
+        if (!res.ok) {
+          let errMessage = `HTTP ${res.status}`;
+          try {
+            const errData = await res.json();
+            if (errData.error && errData.error.message) errMessage = errData.error.message;
+            else if (errData.message) errMessage = errData.message;
+            else if (errData.msg) errMessage = errData.msg;
+            else errMessage = JSON.stringify(errData);
+          } catch (e) { }
           
-          const contentType = res.headers.get('content-type') || '';
-          
-          // 如果响应是普通的 JSON，直接抛出异常（针对 API 返回 200 但 code < 0 的情况）
-          if (contentType.includes('application/json')) {
-            const data = await res.clone().json();
-            if (data.code && data.code < 0) {
-                console.error("API 业务逻辑错误详情:", data);
-                throw new Error(data.msg || data.error || JSON.stringify(data));
-            }
+          if (errMessage.includes('experiencing high demand') || res.status === 429) {
+             errMessage = `系统当前高负载，请稍后重试。\n详细: ${errMessage}`;
           }
-          if (contentType.includes('text/event-stream') || contentType.includes('stream') || contentType.includes('application/x-ndjson')) {
-            // 处理流式响应
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder('utf-8');
-            let buffer = '';
+          throw new Error(errMessage);
+        }
+
+        let urls = [];
+        let rawResponseDebug = [];
+        
+        const contentType = res.headers.get('content-type') || '';
+        
+        if (contentType.includes('application/json')) {
+          const data = await res.clone().json();
+          if (data.code && data.code < 0) {
+              throw new Error(data.msg || data.error || JSON.stringify(data));
+          }
+        }
+        
+        if (contentType.includes('text/event-stream') || contentType.includes('stream') || contentType.includes('application/x-ndjson')) {
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let buffer = '';
+          
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
             
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+            
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed) continue;
               
-              buffer += decoder.decode(value, { stream: true });
-              const lines = buffer.split('\n');
-              buffer = lines.pop(); // 保留最后一个不完整的行
+              let dataStr = trimmed;
+              if (dataStr.startsWith('data:')) {
+                dataStr = dataStr.slice(5).trim();
+              }
+              if (dataStr === '[DONE]') continue;
               
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed) continue;
+              try {
+                const dataObj = JSON.parse(dataStr);
+                rawResponseDebug.push(dataObj);
                 
-                let dataStr = trimmed;
-                if (dataStr.startsWith('data:')) {
-                  dataStr = dataStr.slice(5).trim();
+                if (dataObj.code && dataObj.code < 0) {
+                   throw new Error(dataObj.msg || 'API Error');
                 }
-                if (dataStr === '[DONE]') continue;
+
+                if (dataObj.status === 'IN_PROGRESS' || dataObj.progress) {
+                  msg(`正在生成第 ${index + 1}/${total} 张... 进度: ${dataObj.progress || '处理中'}`);
+                }
                 
-                try {
+                let imgUrl = dataObj.imageUrl || dataObj.url;
+                if (!imgUrl && dataObj.data) {
+                  if (typeof dataObj.data === 'string' && dataObj.data.startsWith('http')) {
+                    imgUrl = dataObj.data;
+                  } else if (dataObj.data.url) {
+                    imgUrl = dataObj.data.url;
+                  } else if (Array.isArray(dataObj.data) && dataObj.data[0]) {
+                    imgUrl = dataObj.data[0].url || (dataObj.data[0].b64_json ? `data:image/png;base64,${dataObj.data[0].b64_json}` : null);
+                  }
+                }
+                if (!imgUrl && typeof dataObj.result === 'string' && dataObj.result.startsWith('http')) imgUrl = dataObj.result;
+                
+                if (imgUrl && !urls.includes(imgUrl)) urls.push(imgUrl);
+              } catch (e) {
+                if (e.message && e.message.includes('API Error')) throw e;
+              }
+            }
+          }
+          
+          if (buffer.trim()) {
+             let dataStr = buffer.trim();
+             if (dataStr.startsWith('data:')) dataStr = dataStr.slice(5).trim();
+             if (dataStr !== '[DONE]') {
+               try {
                   const dataObj = JSON.parse(dataStr);
                   rawResponseDebug.push(dataObj);
+                  if (dataObj.code && dataObj.code < 0) throw new Error(dataObj.msg || 'API Error');
                   
-                  // 判断是否为错误返回
-                  if (dataObj.code && dataObj.code < 0) {
-                     throw new Error(dataObj.msg || 'API Error');
-                  }
-
-                  // 尝试解析进度和结果
-                  if (dataObj.status === 'IN_PROGRESS' || dataObj.progress) {
-                    msg(`正在绘制... 进度: ${dataObj.progress || '处理中'}`);
-                  }
-                  
-                  // 寻找图片URL (增强兼容性)
                   let imgUrl = dataObj.imageUrl || dataObj.url;
                   if (!imgUrl && dataObj.data) {
-                    if (typeof dataObj.data === 'string' && dataObj.data.startsWith('http')) {
-                      imgUrl = dataObj.data;
-                    } else if (dataObj.data.url) {
-                      imgUrl = dataObj.data.url;
-                    } else if (Array.isArray(dataObj.data) && dataObj.data[0]) {
-                      imgUrl = dataObj.data[0].url || (dataObj.data[0].b64_json ? `data:image/png;base64,${dataObj.data[0].b64_json}` : null);
-                    }
+                    if (typeof dataObj.data === 'string' && dataObj.data.startsWith('http')) imgUrl = dataObj.data;
+                    else if (dataObj.data.url) imgUrl = dataObj.data.url;
+                    else if (Array.isArray(dataObj.data) && dataObj.data[0]) imgUrl = dataObj.data[0].url || (dataObj.data[0].b64_json ? `data:image/png;base64,${dataObj.data[0].b64_json}` : null);
                   }
                   if (!imgUrl && typeof dataObj.result === 'string' && dataObj.result.startsWith('http')) imgUrl = dataObj.result;
-                  
-                  if (imgUrl) {
-                    if (!urls.includes(imgUrl)) urls.push(imgUrl);
-                  }
-                } catch (e) {
-                  if (e.message && e.message.includes('API Error')) {
-                    throw e;
-                  }
-                  // 对于解析失败的数据忽略即可，继续读取
-                }
-              }
-            }
-            // 处理最后剩余的buffer
-            if (buffer.trim()) {
-               let dataStr = buffer.trim();
-               if (dataStr.startsWith('data:')) dataStr = dataStr.slice(5).trim();
-               if (dataStr !== '[DONE]') {
-                 try {
-                    const dataObj = JSON.parse(dataStr);
-                    rawResponseDebug.push(dataObj);
-                    if (dataObj.code && dataObj.code < 0) throw new Error(dataObj.msg || 'API Error');
-                    
-                    let imgUrl = dataObj.imageUrl || dataObj.url;
-                    if (!imgUrl && dataObj.data) {
-                      if (typeof dataObj.data === 'string' && dataObj.data.startsWith('http')) imgUrl = dataObj.data;
-                      else if (dataObj.data.url) imgUrl = dataObj.data.url;
-                      else if (Array.isArray(dataObj.data) && dataObj.data[0]) imgUrl = dataObj.data[0].url || (dataObj.data[0].b64_json ? `data:image/png;base64,${dataObj.data[0].b64_json}` : null);
-                    }
-                    if (!imgUrl && typeof dataObj.result === 'string' && dataObj.result.startsWith('http')) imgUrl = dataObj.result;
 
-                    if (imgUrl) {
-                      if (!urls.includes(imgUrl)) urls.push(imgUrl);
-                    }
-                 } catch (e) {
-                    if (e.message && e.message.includes('API Error')) throw e;
-                 }
+                  if (imgUrl && !urls.includes(imgUrl)) urls.push(imgUrl);
+               } catch (e) {
+                  if (e.message && e.message.includes('API Error')) throw e;
                }
+             }
+          }
+        } else {
+          const data = await res.json();
+          rawResponseDebug.push(data);
+          
+          if (data.imageUrl) urls.push(data.imageUrl);
+          else if (data.url) urls.push(data.url);
+          else if (data.result && typeof data.result === 'string' && data.result.startsWith('http')) urls.push(data.result);
+          else if (data.data) {
+            if (typeof data.data === 'string' && data.data.startsWith('http')) {
+              urls.push(data.data);
+            } else if (Array.isArray(data.data)) {
+              urls = data.data.map(item => {
+                if (item.url) return item.url;
+                if (item.b64_json) return `data:image/png;base64,${item.b64_json}`;
+                return null;
+              }).filter(u => u);
             }
-          } else {
-            // 处理同步 JSON 响应
-            const data = await res.json();
-            rawResponseDebug.push(data);
-            
-            // 尝试从多种常见结构中提取图片
-            if (data.imageUrl) urls.push(data.imageUrl);
-            else if (data.url) urls.push(data.url);
-            else if (data.result && typeof data.result === 'string' && data.result.startsWith('http')) urls.push(data.result);
-            else if (data.data) {
-              if (typeof data.data === 'string' && data.data.startsWith('http')) {
-                urls.push(data.data);
-              } else if (Array.isArray(data.data)) {
-                urls = data.data.map(item => {
-                  if (item.url) return item.url;
-                  if (item.b64_json) return `data:image/png;base64,${item.b64_json}`;
-                  return null;
-                }).filter(u => u);
-              }
-            } else if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-              const content = data.choices[0].message.content;
-              const mdImageRegex = /!\[.*?\]\((https?:\/\/[^\s\)]+)\)/g;
-              let match;
-              let foundUrl = false;
-              while ((match = mdImageRegex.exec(content)) !== null) {
+          } else if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+            const content = data.choices[0].message.content;
+            const mdImageRegex = /!\[.*?\]\((https?:\/\/[^\s\)]+)\)/g;
+            let match;
+            let foundUrl = false;
+            while ((match = mdImageRegex.exec(content)) !== null) {
+              urls.push(match[1]);
+              foundUrl = true;
+            }
+            if (!foundUrl) {
+              const urlRegex = /(https?:\/\/[^\s\)]+)/g;
+              while ((match = urlRegex.exec(content)) !== null) {
                 urls.push(match[1]);
                 foundUrl = true;
               }
-              if (!foundUrl) {
-                // 如果没有匹配到 markdown 图片，尝试直接提取纯 URL
-                const urlRegex = /(https?:\/\/[^\s\)]+)/g;
-                while ((match = urlRegex.exec(content)) !== null) {
-                  urls.push(match[1]);
-                  foundUrl = true;
-                }
-              }
             }
           }
+        }
 
-          if (urls.length > 0) {
-            msg('创作完成');
-            addHistoryItem(taskId, 'completed', urls, prompt);
-            addGalleryGroup(urls, prompt);
-          } else {
-            const lastData = rawResponseDebug[rawResponseDebug.length - 1] || {};
-            // 判断是否返回了包含id的数据结构（需要轮询获取结果）
-            const pollingId = lastData.id || lastData.task_id || (lastData.data && lastData.data.id) || (lastData.data && typeof lastData.data === 'string' && !lastData.data.startsWith('http') ? lastData.data : null);
+        // 处理轮询
+        if (urls.length === 0) {
+          const lastData = rawResponseDebug[rawResponseDebug.length - 1] || {};
+          const pollingId = lastData.id || lastData.task_id || (lastData.data && lastData.data.id) || (lastData.data && typeof lastData.data === 'string' && !lastData.data.startsWith('http') ? lastData.data : null);
+          
+          if (pollingId) {
+            msg(`第 ${index + 1}/${total} 张任务已提交，等待完成...`, false);
             
-            if (pollingId) {
-              msg(`任务已提交 (ID: ${pollingId})，正在等待绘制完成...`, false);
-              
-              // 启动轮询机制
+            return new Promise((resolve, reject) => {
               let pollCount = 0;
-              const maxPolls = 150; // 最多轮询150次 (约5分钟)
-              const pollInterval = 2000; // 每2秒轮询一次
+              const maxPolls = 150;
+              const pollInterval = 2000;
               
               const pollTimer = setInterval(async () => {
                 pollCount++;
@@ -2232,21 +2202,18 @@
                   const pollData = await pollRes.json();
                   if (pollData.code && pollData.code < 0) {
                      clearInterval(pollTimer);
-                     throw new Error(pollData.msg || 'API Error');
+                     reject(new Error(pollData.msg || 'API Error'));
+                     return;
                   }
                   
-                  // 根据文档格式，实际数据可能包裹在 data 中
                   const targetData = pollData.data || pollData;
-                  
-                  // 提取进度和状态
                   const progress = targetData.progress || pollData.progress;
                   const status = targetData.status || pollData.status;
                   
                   if (progress !== undefined && status !== 'SUCCESS' && status !== 'succeeded') {
-                    msg(`正在绘制... 进度: ${progress}%`);
+                    msg(`正在生成第 ${index + 1}/${total} 张... 进度: ${progress}%`);
                   }
                   
-                  // 寻找最终图片URL (严格按照文档结构，并兼顾其他可能格式)
                   let imgUrl = null;
                   if (targetData.results && targetData.results[0] && targetData.results[0].url) {
                     imgUrl = targetData.results[0].url;
@@ -2262,53 +2229,73 @@
                     }
                   }
                   
-                  // 检查任务是否失败
                   if (status === 'FAILED' || status === 'FAILURE' || status === 'failed') {
                     clearInterval(pollTimer);
-                    addHistoryItem(taskId, 'failed', [], prompt);
-                    msg(`绘制失败: ${targetData.failure_reason || targetData.error || targetData.failReason || targetData.msg || pollData.msg || '未知错误'}`, true);
-                    setLoading(false);
+                    reject(new Error(targetData.failure_reason || targetData.error || '绘制失败'));
                     return;
                   }
 
                   if (status === 'SUCCESS' || status === 'succeeded' || imgUrl) {
                     if (imgUrl) {
                       clearInterval(pollTimer);
-                      msg('创作完成');
-                      addHistoryItem(taskId, 'completed', [imgUrl], prompt);
-                      addGalleryGroup([imgUrl], prompt);
-                      setLoading(false);
-                    } else {
-                      // 状态成功但找不到图片，打印出来方便调试
-                      msg(`任务已成功，但解析图片失败: ${JSON.stringify(targetData).substring(0, 150)}`, true);
-                      console.log("成功但无图片:", pollData);
+                      resolve([imgUrl]);
                     }
                   } else if (pollCount >= maxPolls) {
                     clearInterval(pollTimer);
-                    addHistoryItem(taskId, 'failed', [], prompt);
-                    msg('轮询超时，未能在规定时间内获取到图片', true);
-                    setLoading(false);
+                    reject(new Error('轮询超时'));
                   }
                 } catch (err) {
                   clearInterval(pollTimer);
-                  console.error('轮询错误:', err);
-                  addHistoryItem(taskId, 'failed', [], prompt);
-                  msg('轮询错误: ' + (err.message || '未知错误'), true);
-                  setLoading(false);
+                  reject(err);
                 }
               }, pollInterval);
-              
-              // 既然进入轮询，我们在当前作用域中不再立刻设置为false，让轮询函数内部控制
-              return; // 提前退出，避免执行外层的 finally { setLoading(false) }
-            } else {
-              addHistoryItem(taskId, 'failed', [], prompt);
-              const debugStr = rawResponseDebug.length > 0 ? JSON.stringify(lastData) : '空';
-              console.log("API 未返回图片，完整响应:", rawResponseDebug);
-              msg('未返回有效图片: ' + debugStr.substring(0, 100) + '...', true);
+            });
+          }
+        }
+        
+        return urls;
+      }
+
+      // ====== 核心：生成请求 (支持批量) ======
+      ui.go.onclick = async () => {
+        const prompt = ui.prompt.value.trim();
+        const key = ui.key.value.trim();
+        const model = ui.model.value || 'gemini-3.1-flash-image-preview';
+        const count = parseInt(ui.count.value) || 1;
+
+        if (!prompt) return msg('请输入一些描述...', true);
+        if (!key) return msg('请填写 Key', true);
+
+        setLoading(true);
+        msg(`开始生成 ${count} 张图片，请耐心等待...`);
+
+        const taskId = Date.now().toString();
+        addHistoryItem(taskId, 'pending', [], prompt);
+
+        try {
+          const allUrls = [];
+          
+          for (let i = 0; i < count; i++) {
+            msg(`正在生成第 ${i + 1}/${count} 张...`);
+            const urls = await singleGenerate(prompt, key, model, i, count);
+            if (urls && urls.length > 0) {
+              allUrls.push(...urls);
+            }
+            
+            // 如果不是最后一张，添加短暂延迟避免请求过快
+            if (i < count - 1) {
+              await new Promise(resolve => setTimeout(resolve, 500));
             }
           }
 
-          // 如果没有被轮询拦截，则直接在这里关闭loading
+          if (allUrls.length > 0) {
+            msg(`创作完成，共生成 ${allUrls.length} 张图片`);
+            addHistoryItem(taskId, 'completed', allUrls, prompt);
+            addGalleryGroup(allUrls, prompt);
+          } else {
+            throw new Error('未能获取到任何图片');
+          }
+
           setLoading(false);
         } catch (err) {
           console.error(err);
@@ -2317,6 +2304,96 @@
           setLoading(false);
         }
       };
+
+      // 保留原有的轮询处理函数用于兼容
+      async function handlePolling(pollingId, key, taskId, prompt) {
+        msg(`任务已提交 (ID: ${pollingId})，正在等待绘制完成...`, false);
+        
+        let pollCount = 0;
+        const maxPolls = 150;
+        const pollInterval = 2000;
+        
+        return new Promise((resolve, reject) => {
+          const pollTimer = setInterval(async () => {
+            pollCount++;
+            try {
+              const pollRes = await fetch('https://grsai.dakka.com.cn/v1/draw/result', {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ' + key,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: pollingId })
+              });
+              
+              if (!pollRes.ok) throw new Error(`HTTP ${pollRes.status}`);
+              
+              const pollData = await pollRes.json();
+              if (pollData.code && pollData.code < 0) {
+                 clearInterval(pollTimer);
+                 reject(new Error(pollData.msg || 'API Error'));
+                 return;
+              }
+              
+              const targetData = pollData.data || pollData;
+              const progress = targetData.progress || pollData.progress;
+              const status = targetData.status || pollData.status;
+              
+              if (progress !== undefined && status !== 'SUCCESS' && status !== 'succeeded') {
+                msg(`正在绘制... 进度: ${progress}%`);
+              }
+              
+              let imgUrl = null;
+              if (targetData.results && targetData.results[0] && targetData.results[0].url) {
+                imgUrl = targetData.results[0].url;
+              } else {
+                imgUrl = targetData.imageUrl || targetData.url || targetData.image_url;
+                if (!imgUrl && typeof targetData === 'string' && targetData.startsWith('http')) {
+                  imgUrl = targetData;
+                } else if (!imgUrl && Array.isArray(targetData) && targetData[0]) {
+                  imgUrl = targetData[0].url || targetData[0].imageUrl || (targetData[0].b64_json ? `data:image/png;base64,${targetData[0].b64_json}` : null);
+                }
+                if (!imgUrl && typeof pollData.result === 'string' && pollData.result.startsWith('http')) {
+                  imgUrl = pollData.result;
+                }
+              }
+              
+              if (status === 'FAILED' || status === 'FAILURE' || status === 'failed') {
+                clearInterval(pollTimer);
+                addHistoryItem(taskId, 'failed', [], prompt);
+                msg(`绘制失败: ${targetData.failure_reason || targetData.error || '未知错误'}`, true);
+                setLoading(false);
+                reject(new Error('绘制失败'));
+                return;
+              }
+
+              if (status === 'SUCCESS' || status === 'succeeded' || imgUrl) {
+                if (imgUrl) {
+                  clearInterval(pollTimer);
+                  msg('创作完成');
+                  addHistoryItem(taskId, 'completed', [imgUrl], prompt);
+                  addGalleryGroup([imgUrl], prompt);
+                  setLoading(false);
+                  resolve([imgUrl]);
+                }
+              } else if (pollCount >= maxPolls) {
+                clearInterval(pollTimer);
+                addHistoryItem(taskId, 'failed', [], prompt);
+                msg('轮询超时，未能在规定时间内获取到图片', true);
+                setLoading(false);
+                reject(new Error('轮询超时'));
+              }
+            } catch (err) {
+              clearInterval(pollTimer);
+              console.error('轮询错误:', err);
+              addHistoryItem(taskId, 'failed', [], prompt);
+              msg('轮询错误: ' + (err.message || '未知错误'), true);
+              setLoading(false);
+              reject(err);
+            }
+          }, pollInterval);
+        });
+      }
 
       // ====== 界面更新 ======
       function setLoading(ing) {
